@@ -19,12 +19,12 @@ class _InstituteDetailsState extends State<InstituteDetails> {
           SingleChildScrollView(
             scrollDirection: Axis.vertical,
             child: Container(
+
               child: Column(
                 children: [
                   Container(
                     height: 300,
                     width: width,
-                    color: AppColors.primaryColor,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -45,7 +45,7 @@ class _InstituteDetailsState extends State<InstituteDetails> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
                     ),
-                    color: AppColors.white_00,
+                    color: AppColors.primaryColor,
                     child: Container(
                       width: width*0.9,
                       child: Column(

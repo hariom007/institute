@@ -16,7 +16,6 @@ class InstituteVerify extends StatelessWidget {
                 Container(
                   height: 300,
                   width: width,
-                  color: AppColors.primaryColor,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -37,7 +36,7 @@ class InstituteVerify extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15),
                   ),
-                  color: AppColors.white_00,
+                  color: AppColors.primaryColor,
                   child: Container(
                     width: width*0.9,
                     padding: EdgeInsets.symmetric(horizontal: 20,vertical: 20),

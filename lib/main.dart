@@ -10,16 +10,20 @@ void main() {
 }
 
 class MyInstitute extends StatelessWidget {
+
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: SplashScreen(),
       title: 'My Institute',
+
       theme: ThemeData(
         primaryColor: AppColors.red_00,
-        backgroundColor: AppColors.appBackgroundColorLight,
-        primaryIconTheme: IconThemeData(color: AppColors.black),
+        // backgroundColor: AppColors.primaryBackGroundColor,
+        scaffoldBackgroundColor: AppColors.primaryBackGroundColor,
+        primaryIconTheme: IconThemeData(color: AppColors.white_00),
         iconTheme: new IconThemeData(color: AppColors.primaryColorDark),
         primaryTextTheme: TextTheme(
           headline6: TextStyle(

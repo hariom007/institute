@@ -25,7 +25,6 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     final height  = MediaQuery.of(context).size.height;
     return Scaffold(
-      backgroundColor: AppColors.primaryColor,
       body: Container(
         alignment: Alignment.center,
         child: Column(

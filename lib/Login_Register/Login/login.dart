@@ -81,7 +81,6 @@ class _LoginPageState extends State<LoginPage> {
                     Container(
                       height: 400,
                       width: width,
-                      color: AppColors.primaryColor,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -110,11 +109,10 @@ class _LoginPageState extends State<LoginPage> {
                             transform: Matrix4.translationValues(0, height*-0.1, 0),
                             child: Card(
                               elevation: 2,
-                              shadowColor: AppColors.white_90,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15),
                               ),
-                              color: AppColors.white_00,
+                              color: AppColors.primaryColor,
                               child: Container(
                                 height:400,
                                 width: width*0.9,

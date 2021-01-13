@@ -67,7 +67,6 @@ class _OTPScreenPageState extends State<OTPScreenPage> {
                     Container(
                       height: 400,
                       width: width,
-                      color: AppColors.primaryColor,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -100,7 +99,7 @@ class _OTPScreenPageState extends State<OTPScreenPage> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15),
                               ),
-                              color: AppColors.white_00,
+                              color: AppColors.primaryColor,
                               child: Container(
                                 height:400,
                                 width: width*0.9,
@@ -135,7 +134,7 @@ class _OTPScreenPageState extends State<OTPScreenPage> {
                                           fontWeight: FontWeight.bold,
                                           fontFamily: 'Montserrat-SemiBold',
                                         ),
-                                        backgroundColor: AppColors.white_10,
+                                        backgroundColor: AppColors.primaryColor,
                                         autoFocus: true,
                                         enablePinAutofill: true,
                                         pinTheme: PinTheme(
