@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:institute/DashBoard/MyProfile/ProfilePage/edit_profile.dart';
 import 'package:institute/Values/AppColors.dart';
 
 class MyProfile extends StatefulWidget {
@@ -125,7 +126,7 @@ class _MyProfileState extends State<MyProfile> {
                   ),
                   child: ListTile(
                     onTap: (){
-
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> EditProfile()));
                     },
                     dense: true,
                     title: Text('Profile',
@@ -161,7 +162,7 @@ class _MyProfileState extends State<MyProfile> {
                           color: AppColors.grey_10
                       ),
                     ),
-                    trailing: Icon(Icons.person,color: AppColors.primaryColorDark,),
+                    trailing: Image.asset('assets/icon/multi_person.png',color: AppColors.primaryColorDark,height: 23,),
                   ),
                 ),
                 Container(
