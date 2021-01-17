@@ -40,9 +40,11 @@ class _EditProfileState extends State<EditProfile> {
                     ),
                     height: double.infinity,
                     width: double.infinity,
-                    child: _image ==null ?  Image.asset(
-                      'assets/logo/sample_logo.png',
-                      fit: BoxFit.contain,
+                    child: _image ==null ?  Center(
+                      child: CircleAvatar(
+                        radius: 85,
+                        child: Image.asset('assets/icon/as.png'),
+                      ),
                     ) : Image.file(_image,
                     fit: BoxFit.contain,),
                   ),

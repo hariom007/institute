@@ -65,7 +65,7 @@ class _OTPScreenPageState extends State<OTPScreenPage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     Container(
-                      height: 400,
+                      height: 300,
                       width: width,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,

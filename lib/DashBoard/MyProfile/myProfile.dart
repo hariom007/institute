@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:institute/DashBoard/MyProfile/ProfilePage/edit_profile.dart';
+import 'package:institute/DashBoard/MyProfile/UploadStudentData/uploadStudentData.dart';
 import 'package:institute/Values/AppColors.dart';
 
 class MyProfile extends StatefulWidget {
@@ -31,7 +32,7 @@ class _MyProfileState extends State<MyProfile> {
         isExtended: true,
         backgroundColor: AppColors.appBarColor,
         onPressed: (){
-
+          Navigator.push(context, MaterialPageRoute(builder: (context)=> UploadStudentData()));
         },
       ),
       body:  Container(
@@ -189,7 +190,7 @@ class _MyProfileState extends State<MyProfile> {
                           fontWeight: FontWeight.bold,
                           color: AppColors.grey_10
                       ),),
-                    trailing: Icon(Icons.person_outline,color: AppColors.primaryColorDark,),
+                    trailing: Icon(Icons.feedback_outlined,color: AppColors.primaryColorDark,),
                   ),
                 ),
 

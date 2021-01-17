@@ -19,7 +19,6 @@ class _InstituteDetailsState extends State<InstituteDetails> {
           SingleChildScrollView(
             scrollDirection: Axis.vertical,
             child: Container(
-
               child: Column(
                 children: [
                   Container(
@@ -38,7 +37,6 @@ class _InstituteDetailsState extends State<InstituteDetails> {
                       ],
                     ),
                   ),
-                  SizedBox(height: 20,),
                   Card(
                     elevation: 2,
                     shadowColor: AppColors.white_90,

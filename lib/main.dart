@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:institute/Example/example.dart';
 
 import 'DashBoard/dashBoard.dart';
 import 'Login_Register/Login/login.dart';
@@ -17,6 +18,8 @@ class MyInstitute extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: SplashScreen(),
+      // home: FilePickerDemo(),
+      
       title: 'My Institute',
 
       theme: ThemeData(
