@@ -1,7 +1,55 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:institute/Values/AppColors.dart';
 
-class InstituteVerify extends StatelessWidget {
+class InstituteVerify extends StatefulWidget {
+
+  @override
+  _InstituteVerifyState createState() => _InstituteVerifyState();
+}
+
+class _InstituteVerifyState extends State<InstituteVerify> {
+
+  bool _isImageShown = false;
+  String _error = 'Please select images in gallery';
+  String _fileName;
+  bool isLoading = false;
+  Map<String, String> _paths;
+  List<File> files = [];
+  String _extension;
+  bool _loadingPath = false;
+  bool _multiPick = false;
+  bool _hasValidMime = false;
+  FileType _pickingTypes = FileType.any;
+  TextEditingController _controller = new TextEditingController();
+
+  void _openFileExplorer() async {
+    setState(() => _loadingPath = true);
+    setState(() => _multiPick = true);
+
+    FilePickerResult result = await FilePicker.platform.pickFiles(
+        allowMultiple: true, type: _pickingTypes);
+
+    try {
+      if (_multiPick) {
+        //_paths = await FilePicker.getMultiFilePath(type: _pickingType, fileExtension: _extension);
+        files = result.paths.map((path) => File(path)).toList();
+
+      }
+    } on PlatformException catch (e) {
+      print("Unsupported operation" + e.toString());
+    }
+    if (!mounted) return;
+    setState(() {
+      _loadingPath = false;
+    });
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
@@ -75,10 +123,175 @@ class InstituteVerify extends StatelessWidget {
                               ]
                             )
                         ),
+                        SizedBox(height: 13,),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Kindly proceed with ',
+                            style: TextStyle(
+                              fontSize: 14,
+                            ),),
+                            GestureDetector(
+                              onTap: (){
+                               /* showDialog(
+                                  context: context,
+                                  builder: (_) => Material(
+                                    type: MaterialType.transparency,
+                                    child: Center(
+                                      // Aligns the container to center
+                                      child: Container(
+                                        width: 100.0,
+                                        height: 56.0,
+                                        color: Colors.green,
+                                        child: Text('jojo'),
+                                      ),
+                                    ),
+                                  ),
+                                );*/
+                              },
+                              child: Text('KYC ?',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                                color: AppColors.red_00
+                              ),),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height:20,),
+                        Container(
+                          decoration: BoxDecoration(
+                              border: Border.all(
+                                  width: 0.5,
+                                  color: AppColors.white_00
+                              ),
+                              borderRadius: BorderRadius.circular(5)
+                          ),
+                          child: Material(
+                            elevation: 5,
+                            color: AppColors.white_00,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5)
+                            ),
+                            child: TextField(
+                              autofocus: false,
+                              readOnly: true,
+                              onTap: (){
+                                _openFileExplorer();
+                                print('Open File explorer');
+                              },
+                              decoration: InputDecoration(
+                                  icon: Padding(
+                                    padding: EdgeInsets.only(left: 7),
+                                    child: Icon(Icons.upload_file,color: AppColors.black,),
+                                  ),
+                                  hintText: 'Upload New Document',
+                                  hintStyle:  TextStyle(
+                                      fontFamily: 'Montserrat-regular',
+                                      color: AppColors.black
+                                  ),
+                                  border: InputBorder.none,
 
+                              ),
+                              style:  TextStyle(
+                                  fontFamily: 'Montserrat-regular',
+                                  color: AppColors.red_90
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height:20,),
+                        Builder(
+                          builder: (BuildContext context) => _loadingPath
+                              ? Padding(
+                            padding: const EdgeInsets.only(bottom: 10.0),
+                            child: const CircularProgressIndicator(),
+                          )
+                              : _fileName != null
+                              ? ListTile(
+                            title: const Text('Directory path'),
+                            subtitle: Text(_fileName),
+                          )
+                              : _paths != null
+                              ? Container(
+                            padding: const EdgeInsets.only(bottom: 30.0),
+                            height:
+                            MediaQuery.of(context).size.height * 0.50,
+                            child: Scrollbar(
+                                child: ListView.separated(
+                                  itemCount:
+                                  _paths != null && _paths.isNotEmpty
+                                      ? _paths.length
+                                      : 1,
+                                  itemBuilder: (BuildContext context, int index) {
+                                    /* final bool isMultiPath = _paths != null && _paths.isNotEmpty;
+                                         String name = 'File $index: ' + (isMultiPath
+                                                ? _paths
+                                         .map((key, value) => key,name)
+                                                // .map((e) => e.name)
+                                                // .toList()[index]
+                                                : _fileName ?? '...');
+                                        final path = _paths
+                                            .map((e) => e.path)
+                                            .toList()[index]
+                                            .toString();*/
 
-                        SizedBox(height: 7,),
+                                    return ListTile(
+                                      title: Text(
+                                        'name',
+                                      ),
+                                      subtitle: Text('path'),
+                                    );
+                                  },
+                                  separatorBuilder:
+                                      (BuildContext context, int index) =>
+                                  const Divider(),
+                                )),
+                          )
+                              : const SizedBox(),
+                        ),
+                        SizedBox(height:20,),
 
+                        RaisedButton.icon(
+                            onPressed: (){
+
+                            },
+                            color: AppColors.appButtonColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5)
+                            ),
+                            icon: Icon(Icons.add,color: AppColors.white_00,),
+                            label: Text('Add New File',
+                            style: TextStyle(
+                              fontFamily: 'Montserrat-semibold',
+                              color: AppColors.white_00
+                            ),)
+                        ),
+
+                        SizedBox(height: 20,),
+                        Container(
+                          width: width,
+                          child: RaisedButton(
+                            color: AppColors.appBarColor,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5)
+                            ),
+                            padding: EdgeInsets.symmetric(
+                              vertical: 13.0,
+                            ),
+                            child: Text('Submit',style: TextStyle(
+                                color: AppColors.white_00,
+                                fontSize: 15,
+                                fontFamily: 'Montserrat-SemiBold'
+                            ),),
+                            onPressed: () {
+                              // MyNavigator.goToKillDashBoard(context);
+
+                            },
+                          ),
+                        ),
+
+                        SizedBox(height: 10,),
 
                       ],
                     ),

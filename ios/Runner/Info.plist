@@ -10,13 +10,11 @@
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Used to demonstrate image picker plugin</string>
 
-	<key>UIBackgroundModes</key>
-	 <array> <string>fetch</string>
-	  <string>remote-notification</string>
-	   </array>
-
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Uploading file in server</string>
+    <key>UIBackgroundModes</key>
+    <array>
+       <string>fetch</string>
+       <string>Uploading file in server</string>
+    </array>
 
 
 	<key>CFBundleDevelopmentRegion</key>
