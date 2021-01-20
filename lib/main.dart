@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:institute/Example/example.dart';
-
 import 'DashBoard/dashBoard.dart';
 import 'Login_Register/Login/login.dart';
 import 'Login_Register/SplashScreen/splashscreen.dart';
@@ -54,7 +52,6 @@ class MyInstitute extends StatelessWidget {
 
       routes: <String,WidgetBuilder>{
         '/dashboard' : (BuildContext context) => DashBoard(),
-        // '/homePage' : (BuildContext context) => HomePage(),
         '/logIn' : (BuildContext context) => LoginPage(),
       },
     );

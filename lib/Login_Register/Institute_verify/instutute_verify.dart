@@ -50,12 +50,6 @@ class InstituteVerify extends StatelessWidget {
                               fontWeight: FontWeight.bold
                           ),),
                         SizedBox(height: 20,),
-                        Text('Advance Group Tuition',
-                          style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold
-                          ),),
-                        SizedBox(height: 7,),
 
                         RichText(
                             text: TextSpan(
@@ -82,32 +76,8 @@ class InstituteVerify extends StatelessWidget {
                             )
                         ),
 
-                        SizedBox(height: 7,),
 
-                        RichText(
-                            text: TextSpan(
-                                children:[
-                                  TextSpan(
-                                    text: 'Status :  ',
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                        color: AppColors.black,
-                                        fontFamily: 'Montserrat-regular'
-                                    ),
-                                  ),
-                                  TextSpan(
-                                    text: 'Pending by Admin Side',
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        color: AppColors.red_90,
-                                        fontWeight: FontWeight.bold,
-                                        fontFamily: 'Montserrat-regular'
-                                    ),
-                                  )
-                                ]
-                            )
-                        ),
+                        SizedBox(height: 7,),
 
 
                       ],

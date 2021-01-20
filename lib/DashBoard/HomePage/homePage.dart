@@ -77,6 +77,7 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+
                   Padding(
                       padding: EdgeInsets.only(left: 20,top: 20,bottom: 25),
                     child: Text('Hello Hariom,',

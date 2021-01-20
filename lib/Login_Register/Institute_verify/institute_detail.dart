@@ -55,8 +55,33 @@ class _InstituteDetailsState extends State<InstituteDetails> {
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold
                             ),),
+                        /*  SizedBox(height: 20,),
+                          RichText(
+                              text: TextSpan(
+                                  children:[
+                                    TextSpan(
+                                      text: 'Your institute code is  ',
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                          color: AppColors.black,
+                                          fontFamily: 'Montserrat-regular'
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: 'XXXXX033XX .',
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          color: AppColors.red_90,
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'Montserrat-regular'
+                                      ),
+                                    )
+                                  ]
+                              )
+                          ),*/
                           SizedBox(height: 20,),
-                          /*Container(
+                          Container(
                             margin: EdgeInsets.only(left: 20,right: 20,bottom: 20),
                             decoration: BoxDecoration(
                                 border: Border.all(
@@ -76,20 +101,20 @@ class _InstituteDetailsState extends State<InstituteDetails> {
                                 decoration: InputDecoration(
                                     icon: Padding(
                                       padding: EdgeInsets.only(left: 7),
-                                      child: Icon(Icons.person,color: AppColors.red_90,),
+                                      child: Icon(Icons.person_outline,color: AppColors.red_90,),
                                     ),
                                     // isDense: true,
-                                    labelText: 'Owner Name',
+                                    labelText: 'Institute Trust Name',
                                     labelStyle: TextStyle(
                                       fontFamily: 'Montserrat-regular',
-                                      color: AppColors.red_90,
+                                      color: AppColors.red_90
                                     ),
 
                                     border: InputBorder.none
                                 ),
                               ),
                             ),
-                          ),*/
+                          ),
                           Container(
                             margin: EdgeInsets.only(left: 20,right: 20,bottom: 20),
                             decoration: BoxDecoration(
@@ -117,6 +142,244 @@ class _InstituteDetailsState extends State<InstituteDetails> {
                                     labelStyle: TextStyle(
                                       fontFamily: 'Montserrat-regular',
                                       color: AppColors.red_90
+                                    ),
+
+                                    border: InputBorder.none
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(left: 20,right: 20,bottom: 20),
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                    width: 0.5,
+                                    color: AppColors.primaryColor
+                                ),
+                                borderRadius: BorderRadius.circular(15)
+                            ),
+                            child: Material(
+                              elevation: 5,
+                              color: AppColors.primaryColorLight,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15)
+                              ),
+                              child: TextField(
+                                autofocus: false,
+                                decoration: InputDecoration(
+                                    icon: Padding(
+                                      padding: EdgeInsets.only(left: 7),
+                                      child: Icon(Icons.alternate_email,color: AppColors.red_90,),
+                                    ),
+                                    // isDense: true,
+                                    labelText: 'Email Id',
+                                    labelStyle: TextStyle(
+                                      fontFamily: 'Montserrat-regular',
+                                      color: AppColors.red_90
+                                    ),
+
+                                    border: InputBorder.none
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(left: 20,right: 20,bottom: 20),
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                    width: 0.5,
+                                    color: AppColors.primaryColor
+                                ),
+                                borderRadius: BorderRadius.circular(15)
+                            ),
+                            child: Material(
+                              elevation: 5,
+                              color: AppColors.primaryColorLight,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15)
+                              ),
+                              child: TextField(
+                                autofocus: false,
+                                decoration: InputDecoration(
+                                    icon: Padding(
+                                      padding: EdgeInsets.only(left: 7),
+                                      child: Icon(Icons.phone,color: AppColors.red_90,),
+                                    ),
+                                    // isDense: true,
+                                    labelText: 'Contact number',
+                                    labelStyle: TextStyle(
+                                        fontFamily: 'Montserrat-regular',
+                                        color: AppColors.red_90
+                                    ),
+
+                                    border: InputBorder.none
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(left: 20,right: 20,bottom: 20),
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                    width: 0.5,
+                                    color: AppColors.primaryColor
+                                ),
+                                borderRadius: BorderRadius.circular(15)
+                            ),
+                            child: Material(
+                              elevation: 5,
+                              color: AppColors.primaryColorLight,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15)
+                              ),
+                              child: TextField(
+                                autofocus: false,
+                                decoration: InputDecoration(
+                                    icon: Padding(
+                                      padding: EdgeInsets.only(left: 7),
+                                      child: Icon(Icons.alternate_email,color: AppColors.red_90,),
+                                    ),
+                                    // isDense: true,
+                                    labelText: 'Website',
+                                    labelStyle: TextStyle(
+                                        fontFamily: 'Montserrat-regular',
+                                        color: AppColors.red_90
+                                    ),
+
+                                    border: InputBorder.none
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(left: 20,right: 20,bottom: 20),
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                    width: 0.5,
+                                    color: AppColors.primaryColor
+                                ),
+                                borderRadius: BorderRadius.circular(15)
+                            ),
+                            child: Material(
+                              elevation: 5,
+                              color: AppColors.primaryColorLight,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15)
+                              ),
+                              child: TextField(
+                                autofocus: false,
+                                decoration: InputDecoration(
+                                    icon: Padding(
+                                      padding: EdgeInsets.only(left: 7),
+                                      child: Icon(Icons.wysiwyg,color: AppColors.red_90,),
+                                    ),
+                                    // isDense: true,
+                                    labelText: 'Campus Id',
+                                    labelStyle: TextStyle(
+                                      fontFamily: 'Montserrat-regular',
+                                      color: AppColors.red_90
+                                    ),
+
+                                    border: InputBorder.none
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(left: 20,right: 20,bottom: 20),
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                    width: 0.5,
+                                    color: AppColors.primaryColor
+                                ),
+                                borderRadius: BorderRadius.circular(15)
+                            ),
+                            child: Material(
+                              elevation: 5,
+                              color: AppColors.primaryColorLight,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15)
+                              ),
+                              child: TextField(
+                                autofocus: false,
+                                decoration: InputDecoration(
+                                    icon: Padding(
+                                      padding: EdgeInsets.only(left: 7),
+                                      child: Icon(Icons.wysiwyg,color: AppColors.red_90,),
+                                    ),
+                                    // isDense: true,
+                                    labelText: 'Institute Type Id',
+                                    labelStyle: TextStyle(
+                                        fontFamily: 'Montserrat-regular',
+                                        color: AppColors.red_90
+                                    ),
+
+                                    border: InputBorder.none
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(left: 20,right: 20,bottom: 20),
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                    width: 0.5,
+                                    color: AppColors.primaryColor
+                                ),
+                                borderRadius: BorderRadius.circular(15)
+                            ),
+                            child: Material(
+                              elevation: 5,
+                              color: AppColors.primaryColorLight,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15)
+                              ),
+                              child: TextField(
+                                autofocus: false,
+                                decoration: InputDecoration(
+                                    icon: Padding(
+                                      padding: EdgeInsets.only(left: 7),
+                                      child: Icon(Icons.wysiwyg,color: AppColors.red_90,),
+                                    ),
+                                    // isDense: true,
+                                    labelText: 'Board Id',
+                                    labelStyle: TextStyle(
+                                        fontFamily: 'Montserrat-regular',
+                                        color: AppColors.red_90
+                                    ),
+
+                                    border: InputBorder.none
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(left: 20,right: 20,bottom: 20),
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                    width: 0.5,
+                                    color: AppColors.primaryColor
+                                ),
+                                borderRadius: BorderRadius.circular(15)
+                            ),
+                            child: Material(
+                              elevation: 5,
+                              color: AppColors.primaryColorLight,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15)
+                              ),
+                              child: TextField(
+                                autofocus: false,
+                                decoration: InputDecoration(
+                                    icon: Padding(
+                                      padding: EdgeInsets.only(left: 7),
+                                      child: Icon(Icons.wysiwyg,color: AppColors.red_90,),
+                                    ),
+                                    // isDense: true,
+                                    labelText: 'University Id',
+                                    labelStyle: TextStyle(
+                                        fontFamily: 'Montserrat-regular',
+                                        color: AppColors.red_90
                                     ),
 
                                     border: InputBorder.none
@@ -178,13 +441,13 @@ class _InstituteDetailsState extends State<InstituteDetails> {
                                 decoration: InputDecoration(
                                     icon: Padding(
                                       padding: EdgeInsets.only(left: 7),
-                                      child: Icon(Icons.code,color: AppColors.red_90,),
+                                      child: Icon(Icons.person,color: AppColors.red_90,),
                                     ),
                                     // isDense: true,
-                                    labelText: 'Institute Code',
+                                    labelText: 'Institue Short Name',
                                     labelStyle: TextStyle(
-                                      fontFamily: 'Montserrat-regular',
-                                      color: AppColors.red_90
+                                        fontFamily: 'Montserrat-regular',
+                                        color: AppColors.red_90
                                     ),
 
                                     border: InputBorder.none
@@ -207,50 +470,131 @@ class _InstituteDetailsState extends State<InstituteDetails> {
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(15)
                               ),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 17,horizontal: 10),
-                                child: Row(
-                                  children: [
-                                    Icon(Icons.upload_file,size: 16,
-                                    color: AppColors.red_90,),
-                                    Text('  Upload New Documents',
-                                      style: TextStyle(
-                                          fontSize: 14
-                                      ),),
+                              child: TextField(
+                                autofocus: false,
+                                decoration: InputDecoration(
+                                    icon: Padding(
+                                      padding: EdgeInsets.only(left: 7),
+                                      child: Icon(Icons.place_outlined,color: AppColors.red_90,),
+                                    ),
+                                    // isDense: true,
+                                    labelText: 'Place',
+                                    labelStyle: TextStyle(
+                                        fontFamily: 'Montserrat-regular',
+                                        color: AppColors.red_90
+                                    ),
 
-                                  ],
+                                    border: InputBorder.none
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(left: 20,right: 20,bottom: 20),
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                    width: 0.5,
+                                    color: AppColors.primaryColor
+                                ),
+                                borderRadius: BorderRadius.circular(15)
+                            ),
+                            child: Material(
+                              elevation: 5,
+                              color: AppColors.primaryColorLight,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15)
+                              ),
+                              child: TextField(
+                                autofocus: false,
+                                decoration: InputDecoration(
+                                    icon: Padding(
+                                      padding: EdgeInsets.only(left: 7),
+                                      child: Icon(Icons.format_list_numbered,color: AppColors.red_90,),
+                                    ),
+                                    // isDense: true,
+                                    labelText: 'UdiseNo',
+                                    labelStyle: TextStyle(
+                                        fontFamily: 'Montserrat-regular',
+                                        color: AppColors.red_90
+                                    ),
+
+                                    border: InputBorder.none
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(left: 20,right: 20,bottom: 20),
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                    width: 0.5,
+                                    color: AppColors.primaryColor
+                                ),
+                                borderRadius: BorderRadius.circular(15)
+                            ),
+                            child: Material(
+                              elevation: 5,
+                              color: AppColors.primaryColorLight,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15)
+                              ),
+                              child: TextField(
+                                autofocus: false,
+                                decoration: InputDecoration(
+                                    icon: Padding(
+                                      padding: EdgeInsets.only(left: 7),
+                                      child: Icon(Icons.format_list_numbered,color: AppColors.red_90,),
+                                    ),
+                                    // isDense: true,
+                                    labelText: 'Index No',
+                                    labelStyle: TextStyle(
+                                        fontFamily: 'Montserrat-regular',
+                                        color: AppColors.red_90
+                                    ),
+
+                                    border: InputBorder.none
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(left: 20,right: 20,bottom: 20),
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                    width: 0.5,
+                                    color: AppColors.primaryColor
+                                ),
+                                borderRadius: BorderRadius.circular(15)
+                            ),
+                            child: Material(
+                              elevation: 5,
+                              color: AppColors.primaryColorLight,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15)
+                              ),
+                              child: TextField(
+                                autofocus: false,
+                                decoration: InputDecoration(
+                                    icon: Padding(
+                                      padding: EdgeInsets.only(left: 7),
+                                      child: Icon(Icons.code,color: AppColors.red_90,),
+                                    ),
+                                    // isDense: true,
+                                    labelText: 'Center Code',
+                                    labelStyle: TextStyle(
+                                        fontFamily: 'Montserrat-regular',
+                                        color: AppColors.red_90
+                                    ),
+
+                                    border: InputBorder.none
                                 ),
                               ),
                             ),
                           ),
 
-                          SizedBox(height: 20,),
-                          RichText(
-                              text: TextSpan(
-                                children: [
-                                  TextSpan(
-                                    text: 'Kindly proceed with KYC',
-                                    style: TextStyle(
-                                      color: AppColors.black,
-                                      fontFamily: 'Montserrat-regular',
-                                      fontSize: 14
-                                    )
-                                  ),
-                                  TextSpan(
-                                    text: ' ?',
-                                      style: TextStyle(
-                                          color: AppColors.red_90,
-                                          fontFamily: 'Montserrat-regular',
-                                          fontSize: 16,
-
-                                      )
-                                  )
-                                ]
-                              )
-                          ),
                           Container(
                             width: width,
-                            margin: EdgeInsets.only(left: 20,right: 20,bottom: 40,top: 5),
+                            margin: EdgeInsets.only(left: 20,right: 20,bottom: 30,top: 5),
                             decoration: BoxDecoration(
                                 border: Border.all(
                                     width: 0.5,
@@ -273,8 +617,8 @@ class _InstituteDetailsState extends State<InstituteDetails> {
                                   fontFamily: 'Montserrat-SemiBold'
                               ),),
                               onPressed: () {
-                                MyNavigator.goToKillDashBoard(context);
-                                // Navigator.push(context, MaterialPageRoute(builder: (context)=>InstituteVerify()));
+                                // MyNavigator.goToKillDashBoard(context);
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=>InstituteVerify()));
 
                               },
                             ),
@@ -284,7 +628,7 @@ class _InstituteDetailsState extends State<InstituteDetails> {
                       ),
                     ),
                   ),
-
+                  SizedBox(height: 40,)
                 ],
               ),
             ),

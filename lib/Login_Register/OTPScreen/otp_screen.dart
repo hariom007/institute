@@ -45,6 +45,7 @@ class _OTPScreenPageState extends State<OTPScreenPage> {
       setState(() {
         _state = 2;
         Navigator.push(context, MaterialPageRoute(builder: (context)=>InstituteDetails()));
+
       });
     });
 
