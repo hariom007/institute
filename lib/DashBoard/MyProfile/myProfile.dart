@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:institute/DashBoard/MyProfile/ProfilePage/edit_profile.dart';
+import 'package:institute/DashBoard/MyProfile/StudentsData/students_data.dart';
 import 'package:institute/DashBoard/MyProfile/UploadStudentData/uploadStudentData.dart';
 import 'package:institute/Values/AppColors.dart';
 
@@ -20,7 +21,8 @@ class _MyProfileState extends State<MyProfile> {
               icon: Icon(Icons.notifications),
               onPressed: (){
               }
-          )
+          ),
+
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
@@ -154,6 +156,7 @@ class _MyProfileState extends State<MyProfile> {
                   ),
                   child: ListTile(
                     onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> StudentsData()));
                     },
                     dense: true,
                     title: Text('Students Data',

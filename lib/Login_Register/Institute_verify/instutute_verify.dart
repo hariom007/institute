@@ -26,7 +26,6 @@ class _InstituteVerifyState extends State<InstituteVerify> {
   String _extension;
   bool _loadingPath = false;
   bool _multiPick = false;
-  bool _hasValidMime = false;
   FileType _pickingTypes = FileType.any;
   TextEditingController _controller = new TextEditingController();
 
