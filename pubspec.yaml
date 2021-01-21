@@ -33,6 +33,7 @@ dependencies:
   pie_chart: ^4.0.1
   image_picker: ^0.6.7+21
   file_picker: ^2.1.5+1
+  fluttertoast: ^7.1.6
 
 
 dev_dependencies:

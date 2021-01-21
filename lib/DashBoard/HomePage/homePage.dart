@@ -29,7 +29,7 @@ class _HomePageState extends State<HomePage> {
       appBar:PreferredSize(
         preferredSize: Size.fromHeight(100.0),
         child: Padding(
-          padding: const EdgeInsets.only(top: 20),
+          padding: const EdgeInsets.only(top: 40),
           child: Container(
             width: width,
             height: 80,
