@@ -1,14 +1,268 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:institute/API/api.dart';
+import 'package:institute/Helper/helper.dart';
 import 'package:institute/Login_Register/Institute_verify/instutute_verify.dart';
 import 'package:institute/MyNavigator/myNavigator.dart';
 import 'package:institute/Values/AppColors.dart';
 
 class InstituteDetails extends StatefulWidget {
+
+  final String instituteId;
+  InstituteDetails({Key key, this.instituteId}) : super(key: key);
+
   @override
   _InstituteDetailsState createState() => _InstituteDetailsState();
 }
+class Type {
+  final String id;
+  final String name;
+
+  Type(this.id, this.name);
+}
 
 class _InstituteDetailsState extends State<InstituteDetails> {
+
+  String ID;
+  bool isLoading = false;
+
+  TextEditingController instituteTrustNameController =  TextEditingController();
+  TextEditingController instituteNameController =  TextEditingController();
+  TextEditingController emailController =  TextEditingController();
+  TextEditingController contactController =  TextEditingController();
+  TextEditingController websiteController =  TextEditingController();
+  TextEditingController addressController =  TextEditingController();
+  TextEditingController shortNameController =  TextEditingController();
+  TextEditingController placeController =  TextEditingController();
+  TextEditingController udiseNoController =  TextEditingController();
+  TextEditingController indexNoController =  TextEditingController();
+  TextEditingController centerCodeController =  TextEditingController();
+
+  Type bindCampus;
+  Type bindInstituteType;
+  Type bindBoardType;
+  Type bindUniversity;
+
+  List<Type> bindCampusList = <Type>[];
+  List<Type> bindInstituteTypeList = <Type>[];
+  List<Type> bindBoardTypeList = <Type>[];
+  List<Type> bindUniversityList = <Type>[];
+
+
+  getBindCampusList() async {
+
+      var data ={
+
+      };
+
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      var res = await CallApi().postData(data,'BindCampusList');
+      var body = json.decode(res.body);
+      print(body);
+      if (body != null)
+      {
+        var result  = body as List;
+        // print(result);
+        var send;
+        for (var abc in result) {
+          send = Type(abc['ddID'],abc['ddlNm']);
+          bindCampusList.add(send);
+        }
+      }
+    }
+    catch(e){
+      print('print error: $e');
+    }
+    setState(() {
+      isLoading = false;
+      // isLoaded = true;
+
+    });
+  }
+  getBindInstituteType() async {
+
+    var data ={
+
+    };
+
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      var res = await CallApi().postData(data,'BindInstituteType');
+      var body = json.decode(res.body);
+      print(body);
+      if (body != null)
+      {
+        var result  = body as List;
+        // print(result);
+        var send;
+        for (var abc in result) {
+          send = Type(abc['ddID'],abc['ddlNm']);
+          bindInstituteTypeList.add(send);
+        }
+      }
+    }
+    catch(e){
+      print('print error: $e');
+    }
+    setState(() {
+      isLoading = false;
+      // isLoaded = true;
+
+    });
+  }
+  getBindBoardTypeList() async {
+
+    var data ={
+
+    };
+
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      var res = await CallApi().postData(data,'BindBoard');
+      var body = json.decode(res.body);
+      print(body);
+      if (body != null)
+      {
+        var result  = body as List;
+        // print(result);
+        var send;
+        for (var abc in result) {
+          send = Type(abc['ddID'],abc['ddlNm']);
+          bindBoardTypeList.add(send);
+        }
+      }
+    }
+    catch(e){
+      print('print error: $e');
+    }
+    setState(() {
+      isLoading = false;
+      // isLoaded = true;
+
+    });
+  }
+  getBindUniversityList() async {
+
+    var data ={
+
+    };
+
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      var res = await CallApi().postData(data,'BindUniversityList');
+      var body = json.decode(res.body);
+      print(body);
+      if (body != null)
+      {
+        var result  = body as List;
+        // print(result);
+        var send;
+        for (var abc in result) {
+          send = Type(abc['ddID'],abc['ddlNm']);
+          bindUniversityList.add(send);
+        }
+      }
+    }
+    catch(e){
+      print('print error: $e');
+    }
+    setState(() {
+      isLoading = false;
+      // isLoaded = true;
+
+    });
+  }
+
+
+  @override
+  void initState() {
+    super.initState();
+
+    ID = '${widget.instituteId}';
+    print(ID);
+
+    getBindCampusList();
+    getBindInstituteType();
+    getBindBoardTypeList();
+    getBindUniversityList();
+
+  }
+
+  void saveInstituteDetail() async {
+    Helper.dialogHelper.showAlertDialog(context);
+    var data = {
+
+      "RegInstCode":ID.toString(),
+      "InstTrustName": instituteTrustNameController.text,
+      "InstName": instituteNameController.text,
+      "EmailID": emailController.text,
+      "ContactDetail": contactController.text,
+      "WebSite": websiteController.text,
+      "CampusID": bindCampus.id,
+      "InstTypeID": bindInstituteType.id,
+      "BoardID": bindBoardType.id,
+      "UniversityID": bindUniversity.id,
+      "InstAddress": addressController.text,
+      "InstShortName": shortNameController.text,
+      "place": placeController.text,
+      "UdiseNo": udiseNoController.text,
+      "IndexNo": indexNoController.text,
+      "CenterCode": centerCodeController.text,
+
+    };
+    print(data);
+    try {
+      setState(() {
+        isLoading=true;
+      });
+      var res = await CallApi().postData(data, 'saveNewInstitute');
+      var body = json.decode(res.body);
+      print(body);
+
+      if (body != null)
+      {
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>InstituteVerify(instituteId : ID)));
+      }
+      else
+      {
+
+        Fluttertoast.showToast(
+          msg: body['msg'].toString(),
+          textColor: Colors.black,
+          toastLength: Toast.LENGTH_SHORT,
+          fontSize: 15,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.white,
+        );
+
+      }
+      setState(() {
+        isLoading=false;
+      });
+
+    }
+
+
+    catch(e){
+      print('print error: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
@@ -55,7 +309,7 @@ class _InstituteDetailsState extends State<InstituteDetails> {
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold
                             ),),
-                        /*  SizedBox(height: 20,),
+                          SizedBox(height: 20,),
                           RichText(
                               text: TextSpan(
                                   children:[
@@ -69,7 +323,7 @@ class _InstituteDetailsState extends State<InstituteDetails> {
                                       ),
                                     ),
                                     TextSpan(
-                                      text: 'XXXXX033XX .',
+                                      text: ID,
                                       style: TextStyle(
                                           fontSize: 16,
                                           color: AppColors.red_90,
@@ -79,7 +333,7 @@ class _InstituteDetailsState extends State<InstituteDetails> {
                                     )
                                   ]
                               )
-                          ),*/
+                          ),
                           SizedBox(height: 20,),
                           Container(
                             margin: EdgeInsets.only(left: 20,right: 20,bottom: 20),
@@ -98,6 +352,7 @@ class _InstituteDetailsState extends State<InstituteDetails> {
                               ),
                               child: TextField(
                                 autofocus: false,
+                                controller: instituteTrustNameController,
                                 decoration: InputDecoration(
                                     icon: Padding(
                                       padding: EdgeInsets.only(left: 7),
@@ -132,6 +387,7 @@ class _InstituteDetailsState extends State<InstituteDetails> {
                               ),
                               child: TextField(
                                 autofocus: false,
+                                controller: instituteNameController,
                                 decoration: InputDecoration(
                                     icon: Padding(
                                       padding: EdgeInsets.only(left: 7),
@@ -166,6 +422,7 @@ class _InstituteDetailsState extends State<InstituteDetails> {
                               ),
                               child: TextField(
                                 autofocus: false,
+                                controller: emailController,
                                 decoration: InputDecoration(
                                     icon: Padding(
                                       padding: EdgeInsets.only(left: 7),
@@ -200,6 +457,7 @@ class _InstituteDetailsState extends State<InstituteDetails> {
                               ),
                               child: TextField(
                                 autofocus: false,
+                                controller: contactController,
                                 decoration: InputDecoration(
                                     icon: Padding(
                                       padding: EdgeInsets.only(left: 7),
@@ -234,6 +492,7 @@ class _InstituteDetailsState extends State<InstituteDetails> {
                               ),
                               child: TextField(
                                 autofocus: false,
+                                controller: websiteController,
                                 decoration: InputDecoration(
                                     icon: Padding(
                                       padding: EdgeInsets.only(left: 7),
@@ -266,22 +525,216 @@ class _InstituteDetailsState extends State<InstituteDetails> {
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(15)
                               ),
-                              child: TextField(
-                                autofocus: false,
-                                decoration: InputDecoration(
-                                    icon: Padding(
-                                      padding: EdgeInsets.only(left: 7),
-                                      child: Icon(Icons.wysiwyg,color: AppColors.red_90,),
+                              child: DropdownButton<Type>(
+                                isExpanded: true,
+                                // validator: (value) => value == null ? 'Select any PG type' : null,
+                                hint: Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 10),
+                                  child: Text('Select Campus List',
+                                    style: TextStyle(
+                                        color: AppColors.grey_00,
+                                        fontFamily: 'Montserrat-Regular'
                                     ),
-                                    // isDense: true,
-                                    labelText: 'Campus Id',
-                                    labelStyle: TextStyle(
-                                      fontFamily: 'Montserrat-regular',
-                                      color: AppColors.red_90
-                                    ),
-
-                                    border: InputBorder.none
+                                  ),
                                 ),
+                                underline: SizedBox(),
+                                /*decoration: InputDecoration(
+                                    enabledBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.white))),*/
+                                value: bindCampus,
+                                onChanged: (Type t) {
+                                  setState(() {
+                                    bindCampus = t;
+                                    print(t.id.toString());
+                                  });
+                                },
+                                items: bindCampusList.map((Type t) {
+                                  return DropdownMenuItem<Type>(
+                                    value: t,
+                                    child: SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(horizontal: 10),
+                                        child: Text(t.name,
+                                          style: TextStyle(
+                                              fontFamily: 'Montserrat-Regular'
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(left: 20,right: 20,bottom: 20),
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                    width: 0.5,
+                                    color: AppColors.primaryColor
+                                ),
+                                borderRadius: BorderRadius.circular(15)
+                            ),
+                            child: Material(
+                              elevation: 5,
+                              color: AppColors.primaryColorLight,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15)
+                              ),
+                              child: DropdownButton<Type>(
+                                isExpanded: true,
+                                // validator: (value) => value == null ? 'Select any PG type' : null,
+                                hint: Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 10),
+                                  child: Text('Select Institute Type',
+                                    style: TextStyle(
+                                        color: AppColors.grey_00,
+                                        fontFamily: 'Montserrat-Regular'
+                                    ),
+                                  ),
+                                ),
+                                underline: SizedBox(),
+                                /*decoration: InputDecoration(
+                                    enabledBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.white))),*/
+                                value: bindInstituteType,
+                                onChanged: (Type t) {
+                                  setState(() {
+                                    bindInstituteType = t;
+                                    print(t.id.toString());
+                                  });
+                                },
+                                items: bindInstituteTypeList.map((Type t) {
+                                  return DropdownMenuItem<Type>(
+                                    value: t,
+                                    child: SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(horizontal: 10),
+                                        child: Text(t.name,
+                                          style: TextStyle(
+                                              fontFamily: 'Montserrat-Regular'
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(left: 20,right: 20,bottom: 20),
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                    width: 0.5,
+                                    color: AppColors.primaryColor
+                                ),
+                                borderRadius: BorderRadius.circular(15)
+                            ),
+                            child: Material(
+                              elevation: 5,
+                              color: AppColors.primaryColorLight,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15)
+                              ),
+                              child: DropdownButton<Type>(
+                                isExpanded: true,
+                                // validator: (value) => value == null ? 'Select any PG type' : null,
+                                hint: Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 10),
+                                  child: Text('Select Board Type',
+                                    style: TextStyle(
+                                        color: AppColors.grey_00,
+                                        fontFamily: 'Montserrat-Regular'
+                                    ),
+                                  ),
+                                ),
+                                underline: SizedBox(),
+                                /*decoration: InputDecoration(
+                                    enabledBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.white))),*/
+                                value: bindBoardType,
+                                onChanged: (Type t) {
+                                  setState(() {
+                                    bindBoardType = t;
+                                    print(t.id.toString());
+                                  });
+                                },
+                                items: bindBoardTypeList.map((Type t) {
+                                  return DropdownMenuItem<Type>(
+                                    value: t,
+                                    child: SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(horizontal: 10),
+                                        child: Text(t.name,
+                                          style: TextStyle(
+                                              fontFamily: 'Montserrat-Regular'
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(left: 20,right: 20,bottom: 20),
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                    width: 0.5,
+                                    color: AppColors.primaryColor
+                                ),
+                                borderRadius: BorderRadius.circular(15)
+                            ),
+                            child: Material(
+                              elevation: 5,
+                              color: AppColors.primaryColorLight,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15)
+                              ),
+                              child: DropdownButton<Type>(
+                                isExpanded: true,
+                                // validator: (value) => value == null ? 'Select any PG type' : null,
+                                hint: Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 10),
+                                  child: Text('Select University Type',
+                                    style: TextStyle(
+                                        color: AppColors.grey_00,
+                                        fontFamily: 'Montserrat-Regular'
+                                    ),
+                                  ),
+                                ),
+                                underline: SizedBox(),
+                                /*decoration: InputDecoration(
+                                    enabledBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.white))),*/
+                                value: bindUniversity,
+                                onChanged: (Type t) {
+                                  setState(() {
+                                    bindUniversity = t;
+                                    print(t.id.toString());
+                                  });
+                                },
+                                items: bindUniversityList.map((Type t) {
+                                  return DropdownMenuItem<Type>(
+                                    value: t,
+                                    child: SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(horizontal: 10),
+                                        child: Text(t.name,
+                                          style: TextStyle(
+                                              fontFamily: 'Montserrat-Regular'
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
                               ),
                             ),
                           ),
@@ -302,108 +755,7 @@ class _InstituteDetailsState extends State<InstituteDetails> {
                               ),
                               child: TextField(
                                 autofocus: false,
-                                decoration: InputDecoration(
-                                    icon: Padding(
-                                      padding: EdgeInsets.only(left: 7),
-                                      child: Icon(Icons.wysiwyg,color: AppColors.red_90,),
-                                    ),
-                                    // isDense: true,
-                                    labelText: 'Institute Type Id',
-                                    labelStyle: TextStyle(
-                                        fontFamily: 'Montserrat-regular',
-                                        color: AppColors.red_90
-                                    ),
-
-                                    border: InputBorder.none
-                                ),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(left: 20,right: 20,bottom: 20),
-                            decoration: BoxDecoration(
-                                border: Border.all(
-                                    width: 0.5,
-                                    color: AppColors.primaryColor
-                                ),
-                                borderRadius: BorderRadius.circular(15)
-                            ),
-                            child: Material(
-                              elevation: 5,
-                              color: AppColors.primaryColorLight,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15)
-                              ),
-                              child: TextField(
-                                autofocus: false,
-                                decoration: InputDecoration(
-                                    icon: Padding(
-                                      padding: EdgeInsets.only(left: 7),
-                                      child: Icon(Icons.wysiwyg,color: AppColors.red_90,),
-                                    ),
-                                    // isDense: true,
-                                    labelText: 'Board Id',
-                                    labelStyle: TextStyle(
-                                        fontFamily: 'Montserrat-regular',
-                                        color: AppColors.red_90
-                                    ),
-
-                                    border: InputBorder.none
-                                ),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(left: 20,right: 20,bottom: 20),
-                            decoration: BoxDecoration(
-                                border: Border.all(
-                                    width: 0.5,
-                                    color: AppColors.primaryColor
-                                ),
-                                borderRadius: BorderRadius.circular(15)
-                            ),
-                            child: Material(
-                              elevation: 5,
-                              color: AppColors.primaryColorLight,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15)
-                              ),
-                              child: TextField(
-                                autofocus: false,
-                                decoration: InputDecoration(
-                                    icon: Padding(
-                                      padding: EdgeInsets.only(left: 7),
-                                      child: Icon(Icons.wysiwyg,color: AppColors.red_90,),
-                                    ),
-                                    // isDense: true,
-                                    labelText: 'University Id',
-                                    labelStyle: TextStyle(
-                                        fontFamily: 'Montserrat-regular',
-                                        color: AppColors.red_90
-                                    ),
-
-                                    border: InputBorder.none
-                                ),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(left: 20,right: 20,bottom: 20),
-                            decoration: BoxDecoration(
-                                border: Border.all(
-                                    width: 0.5,
-                                    color: AppColors.primaryColor
-                                ),
-                                borderRadius: BorderRadius.circular(15)
-                            ),
-                            child: Material(
-                              elevation: 5,
-                              color: AppColors.primaryColorLight,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15)
-                              ),
-                              child: TextField(
-                                autofocus: false,
+                                controller: addressController,
                                 decoration: InputDecoration(
                                     icon: Padding(
                                       padding: EdgeInsets.only(left: 7),
@@ -438,13 +790,14 @@ class _InstituteDetailsState extends State<InstituteDetails> {
                               ),
                               child: TextField(
                                 autofocus: false,
+                                controller: shortNameController,
                                 decoration: InputDecoration(
                                     icon: Padding(
                                       padding: EdgeInsets.only(left: 7),
                                       child: Icon(Icons.person,color: AppColors.red_90,),
                                     ),
                                     // isDense: true,
-                                    labelText: 'Institue Short Name',
+                                    labelText: 'Institute Short Name',
                                     labelStyle: TextStyle(
                                         fontFamily: 'Montserrat-regular',
                                         color: AppColors.red_90
@@ -472,6 +825,7 @@ class _InstituteDetailsState extends State<InstituteDetails> {
                               ),
                               child: TextField(
                                 autofocus: false,
+                                controller: placeController,
                                 decoration: InputDecoration(
                                     icon: Padding(
                                       padding: EdgeInsets.only(left: 7),
@@ -506,6 +860,7 @@ class _InstituteDetailsState extends State<InstituteDetails> {
                               ),
                               child: TextField(
                                 autofocus: false,
+                                controller: udiseNoController,
                                 decoration: InputDecoration(
                                     icon: Padding(
                                       padding: EdgeInsets.only(left: 7),
@@ -540,6 +895,7 @@ class _InstituteDetailsState extends State<InstituteDetails> {
                               ),
                               child: TextField(
                                 autofocus: false,
+                                controller: indexNoController,
                                 decoration: InputDecoration(
                                     icon: Padding(
                                       padding: EdgeInsets.only(left: 7),
@@ -574,6 +930,7 @@ class _InstituteDetailsState extends State<InstituteDetails> {
                               ),
                               child: TextField(
                                 autofocus: false,
+                                controller: centerCodeController,
                                 decoration: InputDecoration(
                                     icon: Padding(
                                       padding: EdgeInsets.only(left: 7),
@@ -618,7 +975,7 @@ class _InstituteDetailsState extends State<InstituteDetails> {
                               ),),
                               onPressed: () {
                                 // MyNavigator.goToKillDashBoard(context);
-                                Navigator.push(context, MaterialPageRoute(builder: (context)=>InstituteVerify()));
+                                saveInstituteDetail();
 
                               },
                             ),
@@ -638,6 +995,7 @@ class _InstituteDetailsState extends State<InstituteDetails> {
               left: 0,
               child: InkWell(
                 onTap: () {
+                  Navigator.pop(context);
                   Navigator.pop(context);
                 },
                 child: Container(

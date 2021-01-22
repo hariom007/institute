@@ -1,13 +1,21 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:institute/API/api.dart';
+import 'package:institute/Helper/helper.dart';
 import 'package:institute/Login_Register/Institute_verify/institute_detail.dart';
 import 'package:institute/MyNavigator/myNavigator.dart';
 import 'package:institute/Values/AppColors.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 class OTPScreenPage extends StatefulWidget {
+
+  final String phone,otp;
+  OTPScreenPage({Key key, this.phone,this.otp}) : super(key:  key);
+
   @override
   _OTPScreenPageState createState() => _OTPScreenPageState();
 }
@@ -15,9 +23,14 @@ class OTPScreenPage extends StatefulWidget {
 class _OTPScreenPageState extends State<OTPScreenPage> {
   int _state = 0;
   bool tandc = false;
+  bool isLoading = false;
+  String mobileNumber;
+
+
+  TextEditingController optController = TextEditingController();
 
   Widget setUpButtonChild() {
-    if (_state == 0) {
+    if (_state == 0 ) {
       return new Text(
         "Sign Up",
         style: const TextStyle(
@@ -42,13 +55,83 @@ class _OTPScreenPageState extends State<OTPScreenPage> {
     });
 
     Timer(Duration(milliseconds: 2200), () {
+
       setState(() {
         _state = 2;
-        Navigator.push(context, MaterialPageRoute(builder: (context)=>InstituteDetails()));
-
       });
-    });
+      register();
 
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    mobileNumber = '${widget.phone}';
+    print(mobileNumber);
+   /* String smsCode = optController.text.toString().trim();
+    print(smsCode.toString());
+
+    String otp= '${widget.otp}'.toString();
+    print(otp);*/
+
+  }
+
+  void register() async {
+    Helper.dialogHelper.showAlertDialog(context);
+
+     String smsCode = optController.text.toString().trim();
+    print(smsCode.toString());
+
+
+    var data = {
+
+      "MobileNo":mobileNumber,
+      "OTP": smsCode
+
+    };
+    print(data);
+    try {
+      setState(() {
+        isLoading=true;
+      });
+      var res = await CallApi().postData(data, 'RegisterOTP');
+      var body = json.decode(res.body);
+      print(body);
+
+      print(body['ID'].toString());
+
+      String id = body['ID'].toString();
+
+      if (body != null && body['msg'] == 'Register OTP Successfully')
+      {
+
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>InstituteDetails(instituteId: id,)));
+
+      }
+      else
+      {
+
+        Fluttertoast.showToast(
+          msg: body['msg'].toString(),
+          textColor: Colors.black,
+          toastLength: Toast.LENGTH_SHORT,
+          fontSize: 15,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.white,
+        );
+
+      }
+      setState(() {
+        isLoading=false;
+      });
+
+    }
+
+
+    catch(e){
+      print('print error: $e');
+    }
   }
 
   @override
@@ -102,7 +185,6 @@ class _OTPScreenPageState extends State<OTPScreenPage> {
                               ),
                               color: AppColors.primaryColor,
                               child: Container(
-                                height:400,
                                 width: width*0.9,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -114,6 +196,11 @@ class _OTPScreenPageState extends State<OTPScreenPage> {
                                           fontWeight: FontWeight.bold
                                       ),),
                                     SizedBox(height: 5,),
+                                    Text('Your Mobile No. is : '+mobileNumber.toString(),
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                      ),),
+                                    SizedBox(height: 5,),
                                     Text('Enter your OTP code here',
                                       style: TextStyle(
                                           fontSize: 14,
@@ -121,13 +208,13 @@ class _OTPScreenPageState extends State<OTPScreenPage> {
                                       ),),
                                     SizedBox(height: 30,),
                                     Padding(
-                                      padding: EdgeInsets.symmetric(vertical: 20,horizontal: 60),
+                                      padding: EdgeInsets.symmetric(vertical: 20,horizontal: 5),
                                       child: PinCodeTextField(
-                                        // controller: _otpController,
+                                        controller: optController,
                                         appContext: context,
                                         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                                         mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                        length:4,
+                                        length:6,
                                         keyboardType: TextInputType.phone,
                                         autoDismissKeyboard: true,
                                         textStyle: TextStyle(
@@ -155,7 +242,6 @@ class _OTPScreenPageState extends State<OTPScreenPage> {
                                     SizedBox(
                                       height: 10,
                                     ),
-
 
                                     Align(
                                       alignment: Alignment.bottomCenter,
@@ -193,11 +279,13 @@ class _OTPScreenPageState extends State<OTPScreenPage> {
                                       child : new MaterialButton(
                                         child: setUpButtonChild(),
                                         onPressed: () {
+
                                           setState(() {
-                                            if (_state == 0) {
-                                              animateButton();
-                                            }
-                                          });
+                                             if (_state == 0) {
+                                               animateButton();
+                                             }
+                                           });
+
                                         },
                                         elevation: 4.0,
                                         minWidth: double.infinity,
@@ -205,11 +293,13 @@ class _OTPScreenPageState extends State<OTPScreenPage> {
                                         color: AppColors.appBarColor,
                                       ),
                                     ),
+                                    SizedBox(height: 20,),
                                   ],
                                 ),
                               ),
                             ),
-                          )
+                          ),
+
                         ],
                       ),
                     )
@@ -222,7 +312,7 @@ class _OTPScreenPageState extends State<OTPScreenPage> {
                 left: 0,
                 child: InkWell(
                   onTap: () {
-                    Navigator.pop(context);
+                    MyNavigator.goToLoginPage(context);
                   },
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 10),

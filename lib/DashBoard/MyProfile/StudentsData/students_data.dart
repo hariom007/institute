@@ -39,7 +39,6 @@ class _StudentsDataState extends State<StudentsData> {
                     color: AppColors.white_00
                 ),
                 headingRowColor: MaterialStateColor.resolveWith((states) => AppColors.appBarColorFont),
-                
                 columns:
                 [
                   DataColumn(label: Text('#',

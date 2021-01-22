@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:institute/Login_Register/OTPScreen/otp_screen.dart';
 import 'package:institute/MyNavigator/myNavigator.dart';
 import 'package:institute/Values/AppColors.dart';
@@ -11,11 +13,85 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends State<LoginPage> with ValidationMixin {
+
   int _state = 0;
   bool tandc = false;
+  String _status;
+  AuthCredential _phoneAuthCredential;
+  String _verificationId;
+  int _code;
+  bool isLoading = false;
+  final _formKey= GlobalKey<FormState>();
+
+  TextEditingController mobileNumberController = TextEditingController();
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
+  void _handleError(e) {
+    print(e.message);
+    setState(() {
+      _status += e.message + '\n';
+    });
+  }
+
+
+  Future<void> loginUser() async{
+
+    void verificationCompleted(AuthCredential phoneAuthCredential) {
+      print('verificationCompleted');
+      setState(() {
+        _status += 'verificationCompleted';
+      });
+      this._phoneAuthCredential = phoneAuthCredential;
+      print(phoneAuthCredential);
+    }
+
+    void verificationFailed(FirebaseAuthException error) {
+      print('verificationFailed');
+      _handleError(error);
+
+      if (error.code == 'invalid-phone-number') {
+        print('The provided phone number is not valid.');
+      }
+    }
+
+    void codeSent(String verificationId, [int code]) {
+      print('codeSent');
+      this._verificationId = verificationId;
+      print(verificationId);
+      this._code = code;
+      // print(code.toString());
+      setState(() {
+        _status += 'Code Sent\n';
+      });
+
+    }
+
+    void codeAutoRetrievalTimeout(String verificationId) {
+      Duration(seconds: 60);
+      print('codeAutoRetrievalTimeout');
+      setState(() {
+        _status += 'codeAutoRetrievalTimeout\n';
+      });
+      print(verificationId);
+    }
+
+    try {
+      await FirebaseAuth.instance.verifyPhoneNumber(
+        phoneNumber: "+91"+mobileNumberController.text,
+        timeout: Duration(seconds: 60),
+        verificationCompleted: verificationCompleted,
+        verificationFailed: verificationFailed,
+        codeSent: codeSent,
+        codeAutoRetrievalTimeout: codeAutoRetrievalTimeout,
+      );
+    }
+
+    catch (e){
+      print(e);
+    }
+  }
 
   void showInSnackBar(String args) {
     _scaffoldKey.currentState.showSnackBar(
@@ -28,6 +104,7 @@ class _LoginPageState extends State<LoginPage> {
         )
     );
   }
+
 
   Widget setUpButtonChild() {
     if (_state == 0) {
@@ -55,10 +132,15 @@ class _LoginPageState extends State<LoginPage> {
     });
 
     Timer(Duration(milliseconds: 2200), () {
+
       setState(() {
         _state = 2;
-       Navigator.push(context, MaterialPageRoute(builder: (context)=>OTPScreenPage()));
+        setState(() {
+          isLoading =true;
+        });
+        loginUser();
       });
+
     });
 
   }
@@ -69,7 +151,9 @@ class _LoginPageState extends State<LoginPage> {
     final width = MediaQuery.of(context).size.width;
     return Scaffold(
       key: _scaffoldKey,
-        body: SingleChildScrollView(
+        body:
+            isLoading == false ?
+        SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Container(
             child: Column(
@@ -111,7 +195,6 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           color: AppColors.primaryColor,
                           child: Container(
-                            height:400,
                             width: width*0.9,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -123,38 +206,47 @@ class _LoginPageState extends State<LoginPage> {
                                   fontWeight: FontWeight.bold
                                 ),),
                                 SizedBox(height: 30,),
-                                Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: width*0.07),
-                                  child: Material(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(2)
-                                    ),
-                                    elevation: 4.0,
-                                    child: TextField(
-                                      cursorColor: Colors.deepOrange,
-                                      keyboardType: TextInputType.number,
-                                      style: TextStyle(
-                                        fontFamily: 'Montserrat-regular',
-                                        letterSpacing: 2.0
+                                Form(
+                                  key: _formKey,
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(horizontal: width*0.07),
+                                    child: Material(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(2)
                                       ),
-                                      inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
-                                      decoration: InputDecoration(
-                                          hintText: "Mobile number",
-                                          hintStyle: TextStyle(
-                                            fontFamily: 'Montserrat-regular',
-                                            letterSpacing: 1.0
-                                          ),
-                                          prefixIcon: Material(
-                                            elevation: 0,
-                                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                                            child: Icon(
-                                              Icons.phone,
-                                              color: AppColors.green_90,
+                                      elevation: 4.0,
+                                      child: TextFormField(
+                                        validator: validateMobile,
+                                        cursorColor: Colors.deepOrange,
+                                        style: TextStyle(
+                                          fontFamily: 'Montserrat-regular',
+                                          letterSpacing: 2.0
+                                        ),
+                                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                                        keyboardType:TextInputType.phone,
+                                        controller: mobileNumberController,
+                                        decoration: InputDecoration(
+                                            hintText: "Mobile number",
+                                            errorStyle: TextStyle(
+                                              fontSize: 12,
+                                              fontFamily: 'Montserrat-semibold'
                                             ),
-                                          ),
-                                          border: InputBorder.none,
-                                          contentPadding:
-                                          EdgeInsets.symmetric(horizontal: 25, vertical: 13)),
+                                            hintStyle: TextStyle(
+                                              fontFamily: 'Montserrat-regular',
+                                              letterSpacing: 1.0
+                                            ),
+                                            prefixIcon: Material(
+                                              elevation: 0,
+                                              borderRadius: BorderRadius.all(Radius.circular(10)),
+                                              child: Icon(
+                                                Icons.phone,
+                                                color: AppColors.green_90,
+                                              ),
+                                            ),
+                                            border: InputBorder.none,
+                                            contentPadding:
+                                            EdgeInsets.symmetric(horizontal: 25, vertical: 13)),
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -231,7 +323,12 @@ class _LoginPageState extends State<LoginPage> {
                                     onPressed: () {
                                       setState(() {
                                         if (_state == 0 && tandc == true) {
-                                          animateButton();
+                                          if (_formKey.currentState.validate() ) {
+                                            animateButton();
+                                          }
+                                          else{
+                                            showInSnackBar('Please Fill Details.');
+                                          }
                                         }
                                         else{
                                           showInSnackBar('Please Accept and Terms & Conditions and Privacy Policy.');
@@ -288,6 +385,22 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
         )
+        : OTPScreenPage(phone: mobileNumberController.text,)
+
     );
   }
+}
+
+class ValidationMixin {
+
+  String validateMobile(String value) {
+    if (value.isEmpty) {
+      return 'Please enter mobile number\n';
+    }
+    if (value.length == 13) {
+      return 'Must be more than 10 character\n';
+    }
+    return null;
+  }
+
 }

@@ -11,6 +11,9 @@ class MyNavigator{
   static void goToLoginPage(BuildContext context){
     Navigator.of(context).pushNamedAndRemoveUntil('/logIn', (route) => false);
   }
+  static void goToSplashScreen(BuildContext context){
+    Navigator.of(context).pushNamedAndRemoveUntil('/splashScreen', (route) => false);
+  }
   static void goToMYProfile(BuildContext context){
     Navigator.push(context, MaterialPageRoute(builder: (context)=> MyProfile()));
   }

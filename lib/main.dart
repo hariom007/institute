@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'DashBoard/dashBoard.dart';
-import 'Login_Register/Login/login.dart';
+import 'Login_Register/Login_register/register.dart';
 import 'Login_Register/SplashScreen/splashscreen.dart';
 import 'Values/AppColors.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+void main() async {
+
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyInstitute());
 }
 
 class MyInstitute extends StatelessWidget {
-
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +56,7 @@ class MyInstitute extends StatelessWidget {
       routes: <String,WidgetBuilder>{
         '/dashboard' : (BuildContext context) => DashBoard(),
         '/logIn' : (BuildContext context) => LoginPage(),
+        '/splashScreen' : (BuildContext context) => SplashScreen(),
       },
     );
   }

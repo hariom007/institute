@@ -9,6 +9,9 @@ import 'package:institute/Values/AppColors.dart';
 
 class InstituteVerify extends StatefulWidget {
 
+  String instituteId;
+  InstituteVerify({Key key,this.instituteId}) : super(key: key);
+
   @override
   _InstituteVerifyState createState() => _InstituteVerifyState();
 }
