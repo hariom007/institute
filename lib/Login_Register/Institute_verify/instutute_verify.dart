@@ -1,16 +1,21 @@
+import 'dart:convert';
 import 'dart:io';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:institute/API/api.dart';
+import 'package:institute/DashBoard/dashBoard.dart';
+import 'package:institute/Helper/helper.dart';
+import 'package:institute/Login_Register/Institute_verify/verifivationPending.dart';
+import 'package:institute/Model/getDocumentList.dart';
 import 'package:institute/MyNavigator/myNavigator.dart';
 import 'package:institute/Values/AppColors.dart';
 
 class InstituteVerify extends StatefulWidget {
 
-  String instituteId;
-  InstituteVerify({Key key,this.instituteId}) : super(key: key);
+  String ddID,regiInstiCode;
+  InstituteVerify({Key key,this.ddID,this.regiInstiCode}) : super(key: key);
 
   @override
   _InstituteVerifyState createState() => _InstituteVerifyState();
@@ -18,13 +23,13 @@ class InstituteVerify extends StatefulWidget {
 
 class _InstituteVerifyState extends State<InstituteVerify> {
 
+  String ddID;
   bool _isImageShown = false;
   String _error = 'Please select images in gallery';
   String _fileName;
-  int serial;
   bool isLoading = false;
   Map<String, String> _paths;
-  List<File> tempfiles = [];
+  List<File> tempfiles;
   List<File> files = [];
   String _extension;
   bool _loadingPath = false;
@@ -32,22 +37,41 @@ class _InstituteVerifyState extends State<InstituteVerify> {
   FileType _pickingTypes = FileType.any;
   TextEditingController _controller = new TextEditingController();
 
+  List<GetDocumentList> _getDocList = [];
+  List<FilePickerResult> result;
 
-  void uploadFiles() async {
+
+  Future<List<dynamic>> makeUploadRequest()async{
+    var send;
+    var list = [];
+    int i = 0;
+    for (var abc in _getDocList) {
+      if(files.asMap().containsKey(i)){
+        send = {'DocID': abc.DocID, 'DocName': abc.DocName , 'DocumentFile' : base64Encode(files[i].readAsBytesSync())};
+        list.add(send);
+      }
+      i++;
+    }
+    return list;
+  }
+  void uploadFiles(int index) async {
 
     setState(() => _loadingPath = true);
     setState(() => _multiPick = true);
 
-    FilePickerResult result = await FilePicker.platform.pickFiles(
-        allowMultiple: true, type: _pickingTypes);
+    result[index] = await FilePicker.platform.pickFiles(
+        allowMultiple: false, type: _pickingTypes);
 
     try {
-      if (_multiPick) {
         //_paths = await FilePicker.getMultiFilePath(type: _pickingType, fileExtension: _extension);
-        tempfiles = result.paths.map((path) => File(path)).toList();
-        files.addAll(tempfiles);
+        tempfiles = result[index].paths.map((path) => File(path)).toList();
+        if(files.asMap().containsKey(index)){
+          files[index] = tempfiles.first;
+        }
+        else{
+          files.add(tempfiles.first);
+        }
 
-      }
     } on PlatformException catch (e) {
       print("Unsupported operation" + e.toString());
     }
@@ -57,8 +81,97 @@ class _InstituteVerifyState extends State<InstituteVerify> {
     });
   }
 
+  uploadDoc() async{
+
+    Helper.dialogHelper.showAlertDialog(context);
+
+    var listOfDoc = await makeUploadRequest();
+    var data = {
+      'RegInstCode' : '${widget.regiInstiCode}',
+      'UploadedDocumentList' : listOfDoc
+    };
+    var res = await CallApi().postData(data, 'UploadDocuments');
+    var body = json.decode(res.body);
+    print(body);
+
+    if (body != null && body['ddID'] =='1')
+    {
+     Navigator.pushAndRemoveUntil(
+       context, MaterialPageRoute(builder: (context) =>
+         DashBoard(regiInstiCode : '${widget.regiInstiCode}')), (Route<dynamic> route) => false,
+     );
+    }
+    else
+    {
+      Fluttertoast.showToast(
+        msg: body['msg'].toString(),
+        textColor: Colors.black,
+        toastLength: Toast.LENGTH_SHORT,
+        fontSize: 15,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.white,
+      );
+
+    }
+    setState(() {
+      isLoading=false;
+    });
+
+  }
+/*  void uploadFiles() async {
+
+    setState(() => _loadingPath = true);
+
+    List<FilePickerResult> result =[];
+
+    for(var i = 0; i<_getDocList.length; i++){
+      var ax = await FilePicker.platform.pickFiles(allowMultiple: false, type: _pickingTypes);
+      result.add(ax);
+      try {
+        //_paths = await FilePicker.getMultiFilePath(type: _pickingType, fileExtension: _extension);
+        tempfiles = ax.paths.map((path) => File(path)).toList();
+        files.addAll(tempfiles);
+
+      } on PlatformException catch (e) {
+        print("Unsupported operation" + e.toString());
+      }
+    }
+    if (!mounted) return;
+    setState(() {
+      _loadingPath = false;
+    });
+  }*/
+
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
+  getDocList() async{
+    List<GetDocumentList> list;
+
+    var data = {
+      "InstTypeID": '1'
+    };
+    try{
+      var res = await CallApi().postData(data, 'GetDocumentList');
+      var body = json.decode(res.body);
+      // print(body);
+      {
+        List getDocList = body as List;
+        list = getDocList.map<GetDocumentList>((json) => GetDocumentList.fromJson(json)).toList();
+
+        setState(() {
+          _getDocList.addAll(list);
+        });
+        result = List(_getDocList.length);
+        tempfiles = List(_getDocList.length);
+
+      }
+
+    }
+    catch(e){
+      print('print error: $e');
+    }
+
+  }
   void showInSnackBar(String args) {
     _scaffoldKey.currentState.showSnackBar(
         new SnackBar(
@@ -72,6 +185,56 @@ class _InstituteVerifyState extends State<InstituteVerify> {
   }
 
 
+  void checkVerificationStatus() async {
+    Helper.dialogHelper.showAlertDialog(context);
+    var data = {
+      "RegInstCode":'${widget.regiInstiCode}'
+    };
+    print(data);
+    try {
+      setState(() {
+        isLoading=true;
+      });
+      var res = await CallApi().postData(data, 'CheckVerificationStatus');
+      var body = json.decode(res.body);
+      print(body);
+
+      if (body['ddlNm'] == 'Institute Is Verified.' )
+      {
+        MyNavigator.goToKillDashBoard(context);
+      }
+      else
+      {
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>VerificationPending()));
+        Fluttertoast.showToast(
+          msg: 'Your Verification is Pending',
+          textColor: Colors.black,
+          toastLength: Toast.LENGTH_SHORT,
+          fontSize: 15,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.white,
+        );
+
+      }
+      setState(() {
+        isLoading=false;
+      });
+
+    }
+
+    catch(e){
+      print('print error: $e');
+    }
+    Navigator.pop(context);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    print('${widget.ddID}');
+    getDocList();
+  }
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
@@ -79,6 +242,319 @@ class _InstituteVerifyState extends State<InstituteVerify> {
     return Scaffold(
       key: _scaffoldKey,
       body: Stack(
+        children: [
+          Container(
+            height: 100,
+            width: width,
+            alignment: Alignment.bottomLeft,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 20),
+              child: RichText(
+                  text: TextSpan(
+                      children:[
+                        TextSpan(
+                          text: 'Your institute code is  ',
+                          style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.black,
+                              fontFamily: 'Montserrat-regular'
+                          ),
+                        ),
+                        TextSpan(
+                          text: '${widget.regiInstiCode}'+' .',
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: AppColors.red_90,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Montserrat-regular'
+                          ),
+                        )
+                      ]
+                  )
+              ),
+            ),
+
+          ),
+          Container(
+            padding: EdgeInsets.only(top: 100,bottom: 70),
+            child: Builder(
+              builder: (context){
+                return _getDocList.isNotEmpty ?
+                ListView.builder(
+                    itemCount: _getDocList.length,
+                    itemBuilder: (BuildContext context, index){
+                      return Container(
+                        width: width*0.9,
+                        padding: EdgeInsets.symmetric(horizontal: 20,vertical: 5),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            SizedBox(height: 10,),
+                            Text("DOC NAME : "+_getDocList[index].DocName+" --- "+" --- DOC ID : " + _getDocList[index].DocID,
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold
+                              ),),
+                            SizedBox(height: 20,),
+
+                            RichText(
+                                text: TextSpan(
+                                    children:[
+                                      TextSpan(
+                                        text: 'Your institute code is  ',
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                            color: AppColors.black,
+                                            fontFamily: 'Montserrat-regular'
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: 'XXXXX033XX .',
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            color: AppColors.red_90,
+                                            fontWeight: FontWeight.bold,
+                                            fontFamily: 'Montserrat-regular'
+                                        ),
+                                      )
+                                    ]
+                                )
+                            ),
+                            SizedBox(height: 13,),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Kindly proceed with ',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                  ),),
+                                GestureDetector(
+                                  onTap: (){
+                                    showDialog(
+                                      context: context,
+                                      builder: (_) => Material(
+                                        type: MaterialType.transparency,
+                                        child: Center(
+                                          // Aligns the container to center
+                                          child: Container(
+                                            width: 100.0,
+                                            height: 56.0,
+                                            color: Colors.green,
+                                            child: Text('jojo'),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: Text('KYC ?',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                        color: AppColors.red_00
+                                    ),),
+                                ),
+                              ],
+                            ),
+
+                            SizedBox(height:20,),
+                            files.asMap().containsKey(index)?
+                            Container():
+                            Container(
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                      width: 0.5,
+                                      color: AppColors.white_00
+                                  ),
+                                  borderRadius: BorderRadius.circular(5)
+                              ),
+                              child: Material(
+                                elevation: 5,
+                                color: AppColors.white_00,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5)
+                                ),
+                                child: TextField(
+                                  autofocus: false,
+                                  readOnly: true,
+                                  onTap: (){
+                                    uploadFiles(index);
+                                    print('Open File explorer');
+                                  },
+                                  decoration: InputDecoration(
+                                    icon: Padding(
+                                      padding: EdgeInsets.only(left: 7),
+                                      child: Icon(Icons.upload_file,color: AppColors.black,),
+                                    ),
+                                    hintText: 'Upload New Document',
+                                    hintStyle:  TextStyle(
+                                        fontFamily: 'Montserrat-regular',
+                                        color: AppColors.black
+                                    ),
+                                    border: InputBorder.none,
+
+                                  ),
+                                  style:  TextStyle(
+                                      fontFamily: 'Montserrat-regular',
+                                      color: AppColors.red_90
+                                  ),
+                                ),
+                              ),
+                            ),
+
+                            files.asMap().containsKey(index) ?
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 15),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text('Your Selected files here   ',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold
+                                    ),
+                                  ),
+                                  Image.asset('assets/icon/hand-down.png',
+                                    height: 20,),
+                                ],
+                              ),
+                            ) :  Container(),
+
+
+                            files.asMap().containsKey(index)? GestureDetector(
+                                onTap: (){
+                                  uploadFiles(index);
+                                },
+                                child:Padding(
+                                  padding: EdgeInsets.only(bottom: 10),
+                                  child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 0),
+                                        child: Text((index+1).toString()+".  ",
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              fontFamily: 'Montserrat-regular',
+                                              fontWeight: FontWeight.bold
+                                          ),),
+                                      ),
+                                      Expanded(
+                                        child: ListTile(
+                                          tileColor: AppColors.white_00,
+                                          dense: true,
+                                          title: Text(files[index].path.split('/').last,
+                                            style: TextStyle(
+                                                fontSize: 13,
+                                                fontFamily: 'Montserrat-regular',
+                                                fontWeight: FontWeight.bold
+                                            ),),
+                                          subtitle: Text(files[index].path,
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              fontFamily: 'Montserrat-regular',
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+
+                                    ],
+                                  ),
+                                )
+                            ): Container(),
+
+
+                            SizedBox(height: 20,),
+                           /* Container(
+                              width: width,
+                              child: RaisedButton(
+                                color: AppColors.appBarColor,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5)
+                                ),
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 13.0,
+                                ),
+                                child: Text('Submit',style: TextStyle(
+                                    color: AppColors.white_00,
+                                    fontSize: 15,
+                                    fontFamily: 'Montserrat-SemiBold'
+                                ),),
+                                onPressed: () {
+                                  // checkVerificationStatus();
+                                  // printReq();
+                                  if(files.isNotEmpty ){
+
+                                    uploadFiles(index);
+
+                                    // MyNavigator.goToKillDashBoard(context);
+                                  }
+                                  else{
+                                    showInSnackBar('Please Upload mandatory documents files.');
+
+                                  }
+
+
+
+
+                                },
+                              ),
+                            ),*/
+
+                            SizedBox(height: 10,),
+
+                          ],
+                        ),
+                      );
+                    })
+                    :Container();
+              },
+            ),
+          ),
+          Positioned(
+            bottom: 0,
+              child: Container(
+                width: width,
+                height: 50,
+                child: RaisedButton(
+                  color: AppColors.appBarColor,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5)
+                  ),
+                  padding: EdgeInsets.symmetric(
+                    vertical: 13.0,
+                  ),
+                  child: Text('Upload Document & Submit',style: TextStyle(
+                      color: AppColors.white_00,
+                      fontSize: 15,
+                      fontFamily: 'Montserrat-SemiBold'
+                  ),),
+                  onPressed: () {
+
+                    if(files.isNotEmpty ){
+                      uploadDoc();
+                    }
+                    else{
+                      showInSnackBar('Please Upload mandatory documents files.');
+                    }
+
+
+
+
+                  },
+                ),
+              ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+/*Stack(
         children: [
           SingleChildScrollView(
             scrollDirection: Axis.vertical,
@@ -158,7 +634,7 @@ class _InstituteVerifyState extends State<InstituteVerify> {
                               ),),
                               GestureDetector(
                                 onTap: (){
-                                 /* showDialog(
+                                 *//* showDialog(
                                     context: context,
                                     builder: (_) => Material(
                                       type: MaterialType.transparency,
@@ -172,7 +648,7 @@ class _InstituteVerifyState extends State<InstituteVerify> {
                                         ),
                                       ),
                                     ),
-                                  );*/
+                                  );*//*
                                 },
                                 child: Text('KYC ?',
                                 style: TextStyle(
@@ -346,7 +822,7 @@ class _InstituteVerifyState extends State<InstituteVerify> {
                                   fontFamily: 'Montserrat-SemiBold'
                               ),),
                               onPressed: () {
-
+                                // checkVerificationStatus();
                                if(files.isNotEmpty ){
 
                                 MyNavigator.goToKillDashBoard(context);
@@ -396,7 +872,4 @@ class _InstituteVerifyState extends State<InstituteVerify> {
                 ),
               )),
         ],
-      ),
-    );
-  }
-}
+      )*/

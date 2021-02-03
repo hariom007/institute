@@ -93,6 +93,8 @@ class _LoginPageState extends State<LoginPage> with ValidationMixin {
     }
   }
 
+
+
   void showInSnackBar(String args) {
     _scaffoldKey.currentState.showSnackBar(
         new SnackBar(
@@ -169,11 +171,8 @@ class _LoginPageState extends State<LoginPage> with ValidationMixin {
                       Container(
                         alignment: Alignment.center,
                         transform: Matrix4.translationValues(0, -15, 0),
-                        child: /*Text('Sign In',style: GoogleFonts.galada(
-                       color: AppColors.white_00,
-                       fontSize: 55
-                     ),)*/
-                        Image.asset('assets/logo/sample_logo.png',
+                        child: Image.asset(
+                          'assets/logo/sample_logo.png',
                           height: 200,
                           width: width*0.6,),
                       ),
@@ -200,7 +199,7 @@ class _LoginPageState extends State<LoginPage> with ValidationMixin {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
                                 SizedBox(height: 30,),
-                                Text('Sign Up',
+                                Text('Sign In',
                                 style: TextStyle(
                                   fontSize: 28,
                                   fontWeight: FontWeight.bold
@@ -324,6 +323,7 @@ class _LoginPageState extends State<LoginPage> with ValidationMixin {
                                       setState(() {
                                         if (_state == 0 && tandc == true) {
                                           if (_formKey.currentState.validate() ) {
+
                                             animateButton();
                                           }
                                           else{

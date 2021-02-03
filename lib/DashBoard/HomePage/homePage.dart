@@ -1,8 +1,19 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:institute/API/api.dart';
+import 'package:institute/Helper/helper.dart';
+import 'package:institute/Login_Register/Institute_verify/verifivationPending.dart';
+import 'package:institute/MyNavigator/myNavigator.dart';
 import 'package:institute/Values/AppColors.dart';
 import 'package:pie_chart/pie_chart.dart';
 
 class HomePage extends StatefulWidget {
+
+  String regiInstiCode;
+  HomePage({Key key,this.regiInstiCode}) : super(key: key);
+
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -10,6 +21,7 @@ enum LegendShape { Circle, Rectangle }
 
 class _HomePageState extends State<HomePage> {
 
+  bool isLoaded= false;
   Map<String, double> dataMap = {
     "Total fee": 205000,
     "Pending fee": 105000,
@@ -21,6 +33,55 @@ class _HomePageState extends State<HomePage> {
     Colors.green,
     Colors.blue,
   ];
+
+  bool isLoading = false;
+
+  void checkVerificationStatus() async {
+    var data = {
+      "RegInstCode":'${widget.regiInstiCode}'
+    };
+    print(data);
+    try {
+      setState(() {
+        isLoading=true;
+      });
+
+      var res = await CallApi().postData(data, 'CheckVerificationStatus');
+      var body = json.decode(res.body);
+      print('${widget.regiInstiCode}'+"============"+body.toString());
+
+      if (body['ddlNm'] != 'Institute Is Verified.' )
+      {
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>VerificationPending()));
+        Fluttertoast.showToast(
+          msg: 'Your Verification is Pending',
+          textColor: Colors.black,
+          toastLength: Toast.LENGTH_SHORT,
+          fontSize: 15,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.white,
+        );
+
+      }
+
+      setState(() {
+        isLoading=false;
+        isLoaded = true;
+      });
+
+    }
+
+    catch(e){
+      print('print error: $e');
+    }
+  }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    checkVerificationStatus();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +131,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      body: Stack(
+      body: isLoaded ==true ? Stack(
         children: [
           SingleChildScrollView(
             child: Container(
@@ -412,7 +473,7 @@ class _HomePageState extends State<HomePage> {
 
 
         ],
-      ),
+      ): Center(child: CircularProgressIndicator()),
     );
   }
 }

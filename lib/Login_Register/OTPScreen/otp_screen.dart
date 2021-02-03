@@ -1,15 +1,19 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:institute/API/api.dart';
+import 'package:institute/DashBoard/dashBoard.dart';
 import 'package:institute/Helper/helper.dart';
 import 'package:institute/Login_Register/Institute_verify/institute_detail.dart';
+import 'package:institute/Login_Register/Institute_verify/instutute_verify.dart';
 import 'package:institute/MyNavigator/myNavigator.dart';
 import 'package:institute/Values/AppColors.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class OTPScreenPage extends StatefulWidget {
 
@@ -25,7 +29,7 @@ class _OTPScreenPageState extends State<OTPScreenPage> {
   bool tandc = false;
   bool isLoading = false;
   String mobileNumber;
-
+  SharedPreferences sharedPreferences;
 
   TextEditingController optController = TextEditingController();
 
@@ -59,9 +63,88 @@ class _OTPScreenPageState extends State<OTPScreenPage> {
       setState(() {
         _state = 2;
       });
-      register();
-
+      // register();
+      // checkDocumentsStatus();
+      getToken();
     });
+  }
+
+
+
+  void checkDocumentsStatus(String regiInstCode) async {
+    var data = {
+      "RegInstCode": regiInstCode
+    };
+    print(data);
+    try {
+      setState(() {
+        isLoading=true;
+      });
+      var res = await CallApi().postData(data, 'CheckDocumentStatus');
+      var body = json.decode(res.body);
+
+      if (body['ddlNm'] != '1' )
+      {
+        Navigator.pushAndRemoveUntil(
+          context, MaterialPageRoute(builder: (context) =>
+            InstituteVerify(/*ddID : ddID,*/regiInstiCode: regiInstCode,)), (Route<dynamic> route) => false,);
+     }
+      else
+      {
+        Navigator.pushAndRemoveUntil(
+          context, MaterialPageRoute(builder: (context) =>
+            DashBoard(regiInstiCode : regiInstCode)), (Route<dynamic> route) => false,);
+      }
+      setState(() {
+        isLoading=false;
+      });
+
+    }
+
+    catch(e){
+      print('print error: $e');
+    }
+  }
+
+  void getToken() async {
+    String a = '${widget.phone}';
+
+    try {
+
+      var response = await http.post(
+      "https://finaltestapi.acadmin.in/token",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: "Password=$a&grant_type=password&flag=1",
+    );
+
+    var body = json.decode(response.body);
+    print(body);
+    String access_token = body['access_token'];
+    String insCode = body['InstCode'];
+
+    if(insCode != '0'){
+
+     /* Navigator.pushAndRemoveUntil(
+        context, MaterialPageRoute(builder: (context) =>
+          DashBoard(regiInstiCode : insCode)), (Route<dynamic> route) => false,);*/
+      sharedPreferences = await SharedPreferences.getInstance();
+      sharedPreferences.setString("ICODE", insCode);
+      MyNavigator.goToSplashScreen(context);
+    //  checkDocumentsStatus(insCode);
+    }
+
+      else{
+      Navigator.push(context, MaterialPageRoute(builder: (context)=> InstituteDetails(
+        access_token: access_token,
+      )));
+    }
+    }
+    catch (exception) {
+      print('$exception');
+    }
+
   }
 
   @override
@@ -77,6 +160,7 @@ class _OTPScreenPageState extends State<OTPScreenPage> {
 
   }
 
+/*
   void register() async {
     Helper.dialogHelper.showAlertDialog(context);
 
@@ -106,7 +190,7 @@ class _OTPScreenPageState extends State<OTPScreenPage> {
       if (body != null && body['msg'] == 'Register OTP Successfully')
       {
 
-        Navigator.push(context, MaterialPageRoute(builder: (context)=>InstituteDetails(instituteId: id,)));
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>InstituteDetails()));
 
       }
       else
@@ -133,6 +217,7 @@ class _OTPScreenPageState extends State<OTPScreenPage> {
       print('print error: $e');
     }
   }
+*/
 
   @override
   Widget build(BuildContext context) {
@@ -279,7 +364,6 @@ class _OTPScreenPageState extends State<OTPScreenPage> {
                                       child : new MaterialButton(
                                         child: setUpButtonChild(),
                                         onPressed: () {
-
                                           setState(() {
                                              if (_state == 0) {
                                                animateButton();

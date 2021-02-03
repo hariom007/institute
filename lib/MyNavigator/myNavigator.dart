@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:institute/DashBoard/MyProfile/myProfile.dart';
+import 'package:institute/Login_Register/Institute_verify/institute_detail.dart';
 
 class MyNavigator{
 
@@ -16,6 +17,9 @@ class MyNavigator{
   }
   static void goToMYProfile(BuildContext context){
     Navigator.push(context, MaterialPageRoute(builder: (context)=> MyProfile()));
+  }
+  static void goToFillInstituteDetails(BuildContext context){
+    Navigator.push(context, MaterialPageRoute(builder: (context)=> InstituteDetails()));
   }
 
 }

@@ -1,7 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:institute/API/api.dart';
+import 'package:institute/DashBoard/dashBoard.dart';
+import 'package:institute/Login_Register/Institute_verify/instutute_verify.dart';
 import 'package:institute/MyNavigator/myNavigator.dart';
 import 'package:institute/Values/AppColors.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
 
@@ -14,13 +20,67 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-
-    Future.delayed(Duration(seconds: 3),(){
-      MyNavigator.goToLoginPage(context);
-    });
+    _checkIfLoggedIn();
 
   }
 
+  bool _isLoggedIn= false;
+ bool isLoading = false;
+  void _checkIfLoggedIn() async {
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    var instCode = localStorage.getString('ICODE');
+    print(instCode);
+
+    if (instCode != null) {
+      setState(() {
+        _isLoggedIn = true;
+      });
+    }
+
+    if (_isLoggedIn) {
+      checkDocumentsStatus(instCode);
+     // MyNavigator.goToKillDashBoard(context);
+    }
+    else{
+      MyNavigator.goToLoginPage(context);
+    }
+
+  }
+
+  void checkDocumentsStatus(String regiInstCode) async {
+    var data = {
+      "RegInstCode": regiInstCode
+    };
+    print(data);
+    try {
+      setState(() {
+        isLoading=true;
+      });
+      var res = await CallApi().postData(data, 'CheckDocumentStatus');
+      var body = json.decode(res.body);
+
+      if (body['ddlNm'] != '1' )
+      {
+        Navigator.pushAndRemoveUntil(
+          context, MaterialPageRoute(builder: (context) =>
+            InstituteVerify(/*ddID : ddID,*/regiInstiCode: regiInstCode,)), (Route<dynamic> route) => false,);
+      }
+      else
+      {
+        Navigator.pushAndRemoveUntil(
+          context, MaterialPageRoute(builder: (context) =>
+            DashBoard(regiInstiCode : regiInstCode)), (Route<dynamic> route) => false,);
+      }
+      setState(() {
+        isLoading=false;
+      });
+
+    }
+
+    catch(e){
+      print('print error: $e');
+    }
+  }
   @override
   Widget build(BuildContext context) {
     final height  = MediaQuery.of(context).size.height;

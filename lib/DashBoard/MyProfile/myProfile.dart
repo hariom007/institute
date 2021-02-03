@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:institute/DashBoard/MyProfile/ProfilePage/edit_profile.dart';
 import 'package:institute/DashBoard/MyProfile/StudentsData/students_data.dart';
 import 'package:institute/DashBoard/MyProfile/UploadStudentData/uploadStudentData.dart';
+import 'package:institute/MyNavigator/myNavigator.dart';
 import 'package:institute/Values/AppColors.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MyProfile extends StatefulWidget {
   @override
@@ -10,6 +12,7 @@ class MyProfile extends StatefulWidget {
 }
 
 class _MyProfileState extends State<MyProfile> {
+  SharedPreferences sharedPreferences;
   @override
   Widget build(BuildContext context) {
     final width= MediaQuery.of(context).size.width;
@@ -242,8 +245,10 @@ class _MyProfileState extends State<MyProfile> {
                                   color: AppColors.primaryColorDark,
                                   fontFamily: 'Montserrat-SemiBold',
                                 ),),
-                              onPressed: (){
-
+                              onPressed: ()async{
+                                      sharedPreferences = await SharedPreferences.getInstance();
+                                      sharedPreferences.clear();
+                                      MyNavigator.goToLoginPage(context);
                               },
                             ),
                             Padding(

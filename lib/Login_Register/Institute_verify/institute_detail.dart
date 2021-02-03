@@ -1,17 +1,20 @@
 import 'dart:convert';
-
+import 'dart:io';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:institute/API/api.dart';
 import 'package:institute/Helper/helper.dart';
 import 'package:institute/Login_Register/Institute_verify/instutute_verify.dart';
 import 'package:institute/MyNavigator/myNavigator.dart';
 import 'package:institute/Values/AppColors.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class InstituteDetails extends StatefulWidget {
 
-  final String instituteId;
-  InstituteDetails({Key key, this.instituteId}) : super(key: key);
+  final String access_token;
+  InstituteDetails({Key key, this.access_token}) : super(key: key);
 
   @override
   _InstituteDetailsState createState() => _InstituteDetailsState();
@@ -27,6 +30,14 @@ class _InstituteDetailsState extends State<InstituteDetails> {
 
   String ID;
   bool isLoading = false;
+  File _image;
+  String img_Data = '';
+  bool _status = true;
+  bool isloading = false;
+  SharedPreferences sharedPreferences;
+
+  String ddID;
+
 
   TextEditingController instituteTrustNameController =  TextEditingController();
   TextEditingController instituteNameController =  TextEditingController();
@@ -49,7 +60,6 @@ class _InstituteDetailsState extends State<InstituteDetails> {
   List<Type> bindInstituteTypeList = <Type>[];
   List<Type> bindBoardTypeList = <Type>[];
   List<Type> bindUniversityList = <Type>[];
-
 
   getBindCampusList() async {
 
@@ -98,7 +108,8 @@ class _InstituteDetailsState extends State<InstituteDetails> {
     try {
       var res = await CallApi().postData(data,'BindInstituteType');
       var body = json.decode(res.body);
-      print(body);
+      // print(body);
+
       if (body != null)
       {
         var result  = body as List;
@@ -107,6 +118,9 @@ class _InstituteDetailsState extends State<InstituteDetails> {
         for (var abc in result) {
           send = Type(abc['ddID'],abc['ddlNm']);
           bindInstituteTypeList.add(send);
+
+          ddID = abc['ddID'];
+          print("Institute Type :  ----"+ddID);
         }
       }
     }
@@ -193,9 +207,6 @@ class _InstituteDetailsState extends State<InstituteDetails> {
   void initState() {
     super.initState();
 
-    ID = '${widget.instituteId}';
-    print(ID);
-
     getBindCampusList();
     getBindInstituteType();
     getBindBoardTypeList();
@@ -203,11 +214,10 @@ class _InstituteDetailsState extends State<InstituteDetails> {
 
   }
 
-  void saveInstituteDetail() async {
+  void saveInstituteDetail(String imgData) async {
     Helper.dialogHelper.showAlertDialog(context);
     var data = {
 
-      "RegInstCode":ID.toString(),
       "InstTrustName": instituteTrustNameController.text,
       "InstName": instituteNameController.text,
       "EmailID": emailController.text,
@@ -223,6 +233,9 @@ class _InstituteDetailsState extends State<InstituteDetails> {
       "UdiseNo": udiseNoController.text,
       "IndexNo": indexNoController.text,
       "CenterCode": centerCodeController.text,
+      "InstLogo" : imgData,
+      "DeviceToken" : '${widget.access_token}',
+
 
     };
     print(data);
@@ -236,7 +249,11 @@ class _InstituteDetailsState extends State<InstituteDetails> {
 
       if (body != null)
       {
-        Navigator.push(context, MaterialPageRoute(builder: (context)=>InstituteVerify(instituteId : ID)));
+        String regiInstiCode = body['ddID'];
+        print(regiInstiCode);
+        sharedPreferences = await SharedPreferences.getInstance();
+        sharedPreferences.setString("ICODE", regiInstiCode);
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>InstituteVerify(ddID : ddID,regiInstiCode: regiInstiCode,)));
       }
       else
       {
@@ -262,6 +279,80 @@ class _InstituteDetailsState extends State<InstituteDetails> {
       print('print error: $e');
     }
   }
+
+  void _optionDialogBox() async {
+    final height = MediaQuery.of(context).size.height;
+    final imageSource = await showModalBottomSheet<ImageSource>(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: AppColors.white_00,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+              top: Radius.circular(2.0)),
+        ),
+        elevation: 2,
+        builder: (builder) {
+          return SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Padding(
+                padding: MediaQuery.of(context).viewInsets,
+                child: Container(
+                    child: Wrap(
+                      children: <Widget>[
+                        ListTile(
+                          dense: true,
+                          onTap: () => Navigator.pop(context, ImageSource.camera),
+                          title: Row(children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.only(left: height * 0.02),
+                            ),
+                            Icon(Icons.camera_alt,color: AppColors.black,),
+                            Padding(
+                              padding: EdgeInsets.only(left: height * 0.02),
+                            ),
+                            Text('Camera',
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontFamily: 'Montserrat-regular'
+                              ),),
+                          ],),
+                        ),
+                        ListTile(
+                          dense: true,
+                          onTap: () => Navigator.pop(context, ImageSource.gallery),
+                          title: new Row(children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.only(left: height * 0.02),
+                            ),
+                            Icon(Icons.sd_storage,color: AppColors.black,),
+                            Padding(
+                              padding: EdgeInsets.only(left: height * 0.02),
+                            ),
+                            Text('Gallery', style: TextStyle(
+                                fontSize: 18,
+                                fontFamily: 'Montserrat-regular'
+                            ),),
+                          ],),
+                        ),
+                      ],
+                    ))),
+          );
+        }
+    );
+    if (imageSource != null) {
+      setState(() {
+        isloading = true;
+      });
+      final file = await ImagePicker.pickImage(source: imageSource);
+      if (file != null) {
+        setState(() => _image = file);
+      }
+      setState(() {
+        isloading = false;
+      });
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -309,31 +400,6 @@ class _InstituteDetailsState extends State<InstituteDetails> {
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold
                             ),),
-                          SizedBox(height: 20,),
-                          RichText(
-                              text: TextSpan(
-                                  children:[
-                                    TextSpan(
-                                      text: 'Your institute code is  ',
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold,
-                                          color: AppColors.black,
-                                          fontFamily: 'Montserrat-regular'
-                                      ),
-                                    ),
-                                    TextSpan(
-                                      text: ID,
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          color: AppColors.red_90,
-                                          fontWeight: FontWeight.bold,
-                                          fontFamily: 'Montserrat-regular'
-                                      ),
-                                    )
-                                  ]
-                              )
-                          ),
                           SizedBox(height: 20,),
                           Container(
                             margin: EdgeInsets.only(left: 20,right: 20,bottom: 20),
@@ -942,10 +1008,56 @@ class _InstituteDetailsState extends State<InstituteDetails> {
                                         fontFamily: 'Montserrat-regular',
                                         color: AppColors.red_90
                                     ),
-
                                     border: InputBorder.none
                                 ),
                               ),
+                            ),
+                          ),
+                          Container(
+                            alignment: Alignment.topLeft,
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 25,right: 20,bottom: 10,top: 5),
+                              child: Text('Select Institute Logo',
+                                style: TextStyle(
+                                    fontFamily: 'Montserrat-regular',
+                                    color: AppColors.red_90,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14
+                                ),
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              _optionDialogBox();
+                            },
+                            child: Container(
+                                margin: EdgeInsets.only(left: 20,right: 20,bottom: 30,top: 5),
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                ),
+                                child:  _image == null
+                                    ? Container(
+                                  height: 150,
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.rectangle,
+                                      image: DecorationImage(
+                                          image: AssetImage('assets/icon/camera.png',),
+                                          fit: BoxFit.contain
+                                      )
+                                  ),
+                                )
+                                    :
+                                Container(
+                                  height: 170,
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.rectangle,
+                                      image: DecorationImage(
+                                          image: FileImage(_image),
+                                          fit: BoxFit.fill
+                                      )
+                                  ),
+                                )
                             ),
                           ),
 
@@ -975,7 +1087,15 @@ class _InstituteDetailsState extends State<InstituteDetails> {
                               ),),
                               onPressed: () {
                                 // MyNavigator.goToKillDashBoard(context);
-                                saveInstituteDetail();
+
+
+                                Helper.dialogHelper.showAlertDialog(context);
+                                if(_image != null){
+                                  img_Data = base64Encode(_image.readAsBytesSync());
+                                }
+                                saveInstituteDetail(img_Data);
+
+                                Navigator.pop(context);
 
                               },
                             ),

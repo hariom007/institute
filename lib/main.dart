@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:institute/Login_Register/Institute_verify/verifivationPending.dart';
 import 'DashBoard/dashBoard.dart';
-import 'Login_Register/Login_register/register.dart';
+import 'Login_Register/Institute_verify/instutute_verify.dart';
+import 'Login_Register/Login_register/login.dart';
 import 'Login_Register/SplashScreen/splashscreen.dart';
 import 'Values/AppColors.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -10,6 +12,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(MyInstitute());
+
 }
 
 class MyInstitute extends StatelessWidget {
@@ -19,7 +22,7 @@ class MyInstitute extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: SplashScreen(),
-      // home: FilePickerDemo(),
+      // home: VerificationPending(),
       
       title: 'My Institute',
 
