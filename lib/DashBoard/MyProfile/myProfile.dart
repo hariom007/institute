@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:institute/API/api.dart';
 import 'package:institute/DashBoard/MyProfile/ProfilePage/edit_profile.dart';
 import 'package:institute/DashBoard/MyProfile/StudentsData/students_data.dart';
 import 'package:institute/DashBoard/MyProfile/UploadStudentData/uploadStudentData.dart';
@@ -13,6 +16,42 @@ class MyProfile extends StatefulWidget {
 
 class _MyProfileState extends State<MyProfile> {
   SharedPreferences sharedPreferences;
+  bool isLoading = false;
+
+  void uploadStudent() async {
+    sharedPreferences = await SharedPreferences.getInstance();
+    var mobileNum = sharedPreferences.getString("MOB");
+    var data = {
+      "MobileNo": mobileNum
+    };
+    print(data);
+    try {
+      setState(() {
+        isLoading=true;
+      });
+
+      var res = await CallApi().postData2(data, 'UploadStudent');
+      var body = json.decode(res.body);
+      print(body);
+
+      setState(() {
+        isLoading=false;
+      });
+
+    }
+
+    catch(e){
+      print('print error: $e');
+    }
+
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    uploadStudent();
+  }
+
   @override
   Widget build(BuildContext context) {
     final width= MediaQuery.of(context).size.width;

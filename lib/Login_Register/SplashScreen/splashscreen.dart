@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:institute/API/api.dart';
 import 'package:institute/DashBoard/dashBoard.dart';
-import 'package:institute/Login_Register/Institute_verify/instutute_verify.dart';
+import 'package:institute/Login_Register/Institute_verify/UploadInstituteDocuments.dart';
 import 'package:institute/MyNavigator/myNavigator.dart';
 import 'package:institute/Values/AppColors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -63,7 +63,7 @@ class _SplashScreenState extends State<SplashScreen> {
       {
         Navigator.pushAndRemoveUntil(
           context, MaterialPageRoute(builder: (context) =>
-            InstituteVerify(/*ddID : ddID,*/regiInstiCode: regiInstCode,)), (Route<dynamic> route) => false,);
+            UploadInstituedocuments(/*ddID : ddID,*/regiInstiCode: regiInstCode,)), (Route<dynamic> route) => false,);
       }
       else
       {

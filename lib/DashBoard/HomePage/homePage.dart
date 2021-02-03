@@ -86,7 +86,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    return Scaffold(
+    return isLoaded? Scaffold(
       appBar:PreferredSize(
         preferredSize: Size.fromHeight(100.0),
         child: Padding(
@@ -131,7 +131,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      body: isLoaded ==true ? Stack(
+      body: isLoaded == true ? Stack(
         children: [
           SingleChildScrollView(
             child: Container(
@@ -474,6 +474,6 @@ class _HomePageState extends State<HomePage> {
 
         ],
       ): Center(child: CircularProgressIndicator()),
-    );
+    ):Center(child: CircularProgressIndicator());
   }
 }

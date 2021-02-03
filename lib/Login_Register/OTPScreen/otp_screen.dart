@@ -8,8 +8,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:institute/API/api.dart';
 import 'package:institute/DashBoard/dashBoard.dart';
 import 'package:institute/Helper/helper.dart';
-import 'package:institute/Login_Register/Institute_verify/institute_detail.dart';
-import 'package:institute/Login_Register/Institute_verify/instutute_verify.dart';
+import 'package:institute/Login_Register/Institute_verify/fill_institute_detail.dart';
+import 'package:institute/Login_Register/Institute_verify/UploadInstituteDocuments.dart';
 import 'package:institute/MyNavigator/myNavigator.dart';
 import 'package:institute/Values/AppColors.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
@@ -87,7 +87,7 @@ class _OTPScreenPageState extends State<OTPScreenPage> {
       {
         Navigator.pushAndRemoveUntil(
           context, MaterialPageRoute(builder: (context) =>
-            InstituteVerify(/*ddID : ddID,*/regiInstiCode: regiInstCode,)), (Route<dynamic> route) => false,);
+            UploadInstituedocuments(/*ddID : ddID,*/regiInstiCode: regiInstCode,)), (Route<dynamic> route) => false,);
      }
       else
       {
@@ -131,12 +131,15 @@ class _OTPScreenPageState extends State<OTPScreenPage> {
           DashBoard(regiInstiCode : insCode)), (Route<dynamic> route) => false,);*/
       sharedPreferences = await SharedPreferences.getInstance();
       sharedPreferences.setString("ICODE", insCode);
+      String mobileNum = body['MobileNo'];
+      sharedPreferences.setString("MOB", mobileNum);
+      print(mobileNum);
       MyNavigator.goToSplashScreen(context);
     //  checkDocumentsStatus(insCode);
     }
 
       else{
-      Navigator.push(context, MaterialPageRoute(builder: (context)=> InstituteDetails(
+      Navigator.push(context, MaterialPageRoute(builder: (context)=> FillInstituteDetails(
         access_token: access_token,
       )));
     }

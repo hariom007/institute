@@ -12,16 +12,16 @@ import 'package:institute/Model/getDocumentList.dart';
 import 'package:institute/MyNavigator/myNavigator.dart';
 import 'package:institute/Values/AppColors.dart';
 
-class InstituteVerify extends StatefulWidget {
+class UploadInstituedocuments extends StatefulWidget {
 
   String ddID,regiInstiCode;
-  InstituteVerify({Key key,this.ddID,this.regiInstiCode}) : super(key: key);
+  UploadInstituedocuments({Key key,this.ddID,this.regiInstiCode}) : super(key: key);
 
   @override
-  _InstituteVerifyState createState() => _InstituteVerifyState();
+  _UploadInstituedocumentsState createState() => _UploadInstituedocumentsState();
 }
 
-class _InstituteVerifyState extends State<InstituteVerify> {
+class _UploadInstituedocumentsState extends State<UploadInstituedocuments> {
 
   String ddID;
   bool _isImageShown = false;

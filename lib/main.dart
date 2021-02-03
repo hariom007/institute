@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:institute/Login_Register/Institute_verify/verifivationPending.dart';
 import 'DashBoard/dashBoard.dart';
-import 'Login_Register/Institute_verify/instutute_verify.dart';
+import 'Login_Register/Institute_verify/UploadInstituteDocuments.dart';
 import 'Login_Register/Login_register/login.dart';
 import 'Login_Register/SplashScreen/splashscreen.dart';
 import 'Values/AppColors.dart';
@@ -22,8 +22,8 @@ class MyInstitute extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: SplashScreen(),
-      // home: VerificationPending(),
-      
+      // home: VerificationPending()
+
       title: 'My Institute',
 
       theme: ThemeData(
