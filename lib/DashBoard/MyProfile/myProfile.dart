@@ -5,9 +5,11 @@ import 'package:institute/API/api.dart';
 import 'package:institute/DashBoard/MyProfile/ProfilePage/edit_profile.dart';
 import 'package:institute/DashBoard/MyProfile/StudentsData/students_data.dart';
 import 'package:institute/DashBoard/MyProfile/UploadStudentData/uploadStudentData.dart';
+import 'package:institute/DashBoard/MyProfile/UploadStudentData/uploadStudentDataWebView.dart';
 import 'package:institute/MyNavigator/myNavigator.dart';
 import 'package:institute/Values/AppColors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MyProfile extends StatefulWidget {
   @override
@@ -15,8 +17,10 @@ class MyProfile extends StatefulWidget {
 }
 
 class _MyProfileState extends State<MyProfile> {
+
   SharedPreferences sharedPreferences;
   bool isLoading = false;
+  String url;
 
   void uploadStudent() async {
     sharedPreferences = await SharedPreferences.getInstance();
@@ -32,8 +36,11 @@ class _MyProfileState extends State<MyProfile> {
 
       var res = await CallApi().postData2(data, 'UploadStudent');
       var body = json.decode(res.body);
-      print(body);
+      // print(body);
 
+      url  = body["Url"];
+
+      print(url);
       setState(() {
         isLoading=false;
       });
@@ -45,12 +52,12 @@ class _MyProfileState extends State<MyProfile> {
     }
 
   }
-
   @override
   void initState() {
     super.initState();
     uploadStudent();
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -75,8 +82,14 @@ class _MyProfileState extends State<MyProfile> {
         ),),
         isExtended: true,
         backgroundColor: AppColors.appBarColor,
-        onPressed: (){
-          Navigator.push(context, MaterialPageRoute(builder: (context)=> UploadStudentData()));
+        onPressed: () async{
+         /* await launch(
+            url,
+            forceSafariVC: true,
+            forceWebView: true,
+            enableJavaScript: true,
+          );*/
+          Navigator.push(context, MaterialPageRoute(builder: (context)=>UploadStudentDatWebView(url: url,)));
         },
       ),
       body:  Container(

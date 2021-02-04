@@ -29,7 +29,6 @@ class _SplashScreenState extends State<SplashScreen> {
   void _checkIfLoggedIn() async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     var instCode = localStorage.getString('ICODE');
-    print(instCode);
 
     if (instCode != null) {
       setState(() {

@@ -3,6 +3,14 @@
 <plist version="1.0">
 <dict>
 
+    <key>NSAppTransportSecurity</key>
+    <dict>
+        <key>NSAllowsArbitraryLoads</key>
+        <true/>
+        <key>NSAllowsArbitraryLoadsInWebContent</key>
+        <true/>
+    </dict>
+
 	<key>NSCameraUsageDescription</key>
 	<string>Used to demonstrate image picker plugin</string>
 	<key>NSMicrophoneUsageDescription</key>
@@ -15,7 +23,6 @@
        <string>fetch</string>
        <string>Uploading file in server</string>
     </array>
-
 
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>

@@ -51,7 +51,6 @@ class _VerificationPendingState extends State<VerificationPending> {
                     fontFamily: 'Montserrat-SemiBold'
                 ),),
                 onPressed: () async{
-
                  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
                   sharedPreferences.clear();
                   MyNavigator.goToLoginPage(context);

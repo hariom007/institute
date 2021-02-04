@@ -14,8 +14,8 @@ import 'package:institute/Values/AppColors.dart';
 
 class UploadInstituedocuments extends StatefulWidget {
 
-  String ddID,regiInstiCode;
-  UploadInstituedocuments({Key key,this.ddID,this.regiInstiCode}) : super(key: key);
+  String InstTypeId,regiInstiCode;
+  UploadInstituedocuments({Key key,this.InstTypeId,this.regiInstiCode}) : super(key: key);
 
   @override
   _UploadInstituedocumentsState createState() => _UploadInstituedocumentsState();
@@ -148,7 +148,7 @@ class _UploadInstituedocumentsState extends State<UploadInstituedocuments> {
     List<GetDocumentList> list;
 
     var data = {
-      "InstTypeID": '1'
+      "InstTypeID": "1"//'${widget.InstTypeId}'
     };
     try{
       var res = await CallApi().postData(data, 'GetDocumentList');
@@ -231,7 +231,7 @@ class _UploadInstituedocumentsState extends State<UploadInstituedocuments> {
   @override
   void initState() {
     super.initState();
-    print('${widget.ddID}');
+  //  print('${widget.InstTypeId}');
     getDocList();
   }
 

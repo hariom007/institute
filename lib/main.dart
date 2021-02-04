@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:institute/Login_Register/Institute_verify/verifivationPending.dart';
 import 'DashBoard/dashBoard.dart';
+import 'Example/example.dart';
 import 'Login_Register/Institute_verify/UploadInstituteDocuments.dart';
 import 'Login_Register/Login_register/login.dart';
 import 'Login_Register/SplashScreen/splashscreen.dart';

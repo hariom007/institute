@@ -36,7 +36,7 @@ class _FillInstituteDetailsState extends State<FillInstituteDetails> {
   bool isloading = false;
   SharedPreferences sharedPreferences;
 
-  String ddID;
+  String InstTypeId;
 
 
   TextEditingController instituteTrustNameController =  TextEditingController();
@@ -119,8 +119,8 @@ class _FillInstituteDetailsState extends State<FillInstituteDetails> {
           send = Type(abc['ddID'],abc['ddlNm']);
           bindInstituteTypeList.add(send);
 
-          ddID = abc['ddID'];
-          print("Institute Type :  ----"+ddID);
+          InstTypeId = abc['ddID'];
+         // print("Institute Type :  ----"+ddID);
         }
       }
     }
@@ -245,23 +245,21 @@ class _FillInstituteDetailsState extends State<FillInstituteDetails> {
       });
       var res = await CallApi().postData(data, 'saveNewInstitute');
       var body = json.decode(res.body);
-      print(body);
+      print("Save New Institute : "+body.toString());
 
-      if (body != null)
+      if (body['ddID'] != null)
       {
         String regiInstiCode = body['ddID'];
-        String mobileNum = body['MobileNo'];
-        print(mobileNum);
-        sharedPreferences.setString("MOB", mobileNum);
         sharedPreferences = await SharedPreferences.getInstance();
         sharedPreferences.setString("ICODE", regiInstiCode);
-        Navigator.push(context, MaterialPageRoute(builder: (context)=>UploadInstituedocuments(ddID : ddID,regiInstiCode: regiInstiCode,)));
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>UploadInstituedocuments(InstTypeId : InstTypeId,regiInstiCode: regiInstiCode,)));
       }
       else
       {
 
+        Navigator.pop(context);
         Fluttertoast.showToast(
-          msg: body['msg'].toString(),
+          msg: "Error Occured",
           textColor: Colors.black,
           toastLength: Toast.LENGTH_SHORT,
           fontSize: 15,
@@ -1123,8 +1121,7 @@ class _FillInstituteDetailsState extends State<FillInstituteDetails> {
               left: 0,
               child: InkWell(
                 onTap: () {
-                  Navigator.pop(context);
-                  Navigator.pop(context);
+                  MyNavigator.goToLoginPage(context);
                 },
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 10),
