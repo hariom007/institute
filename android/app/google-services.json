@@ -1,49 +1,42 @@
 {
   "project_info": {
-    "project_number": "548076750815",
-    "project_id": "feaseapp-84237",
-    "storage_bucket": "feaseapp-84237.appspot.com"
+    "project_number": "343356841238",
+    "project_id": "feaseapp-20dc4",
+    "storage_bucket": "feaseapp-20dc4.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:548076750815:android:ece325308e8460dbc1266a",
+        "mobilesdk_app_id": "1:343356841238:android:9678b24e7015ee09684437",
         "android_client_info": {
           "package_name": "com.rohanvaja.institute"
         }
       },
       "oauth_client": [
         {
-          "client_id": "548076750815-9db7h9dj0235nfdeu0psdkl8rv8as296.apps.googleusercontent.com",
+          "client_id": "343356841238-0ulkn25tltnjfnhecm5m2bas87e2fcpq.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.rohanvaja.institute",
-            "certificate_hash": "6d4824287e548b6fe190cf8197cea85057b38a0b"
+            "certificate_hash": "496cc286197ee100b79b940ec7dda35088a0cf31"
           }
         },
         {
-          "client_id": "548076750815-aujeeo9q62dtot65r0nv81767cvuufr1.apps.googleusercontent.com",
+          "client_id": "343356841238-nb17k8oiit5est9diu33rcdmq090t61h.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyD0yb28Ed1oKjxuwIMANDsdxTiCe2-2LbU"
+          "current_key": "AIzaSyAnKXd8vLk5phy0iceNAmxKAqJ_TzdRzmo"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "548076750815-aujeeo9q62dtot65r0nv81767cvuufr1.apps.googleusercontent.com",
+              "client_id": "343356841238-nb17k8oiit5est9diu33rcdmq090t61h.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "548076750815-p741o6r88iv642ttjf88085lgte1ga7g.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.rohanvaja.institute"
-              }
             }
           ]
         }

@@ -11,6 +11,7 @@ import 'package:institute/Login_Register/Institute_verify/verifivationPending.da
 import 'package:institute/Model/getDocumentList.dart';
 import 'package:institute/MyNavigator/myNavigator.dart';
 import 'package:institute/Values/AppColors.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UploadInstituedocuments extends StatefulWidget {
 
@@ -249,30 +250,100 @@ class _UploadInstituedocumentsState extends State<UploadInstituedocuments> {
             alignment: Alignment.bottomLeft,
             child: Padding(
               padding: const EdgeInsets.only(left: 20),
-              child: RichText(
-                  text: TextSpan(
-                      children:[
-                        TextSpan(
-                          text: 'Your institute code is  ',
-                          style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.black,
-                              fontFamily: 'Montserrat-regular'
-                          ),
-                        ),
-                        TextSpan(
-                          text: '${widget.regiInstiCode}'+' .',
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: AppColors.red_90,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Montserrat-regular'
-                          ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: RichText(
+                        text: TextSpan(
+                            children:[
+                              TextSpan(
+                                text: 'Your institute code is  ',
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.black,
+                                    fontFamily: 'Montserrat-regular'
+                                ),
+                              ),
+                              TextSpan(
+                                text: '${widget.regiInstiCode}'+' .',
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    color: AppColors.red_90,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'Montserrat-regular'
+                                ),
+                              )
+                            ]
                         )
-                      ]
-                  )
-              ),
+                    ),
+                  ),
+                  CircleAvatar(
+                    radius: 20,
+                    backgroundColor: AppColors.appBarColor,
+                    child: IconButton(
+                        icon: Icon(Icons.logout),
+                        onPressed:(){
+                          showDialog<void>(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text('Exit',
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: 'Montserrat-SemiBold',
+                                    ),),
+                                  content: Text(
+                                    'Are you sure you want to Logout?',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontFamily: 'Montserrat-Regular',
+                                    ),
+                                  ),
+                                  actions: <Widget>[
+                                    FlatButton(
+                                      child: Text('Logout',
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          color: AppColors.primaryColorDark,
+                                          fontFamily: 'Montserrat-SemiBold',
+                                        ),),
+                                      onPressed: ()async{
+                                        SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+                                        sharedPreferences.clear();
+                                        MyNavigator.goToLoginPage(context);
+                                      },
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(right: 20),
+                                      child: FlatButton(
+                                        child: Text('Cancel',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            color: AppColors.appBarColor,
+                                            fontFamily: 'Montserrat-SemiBold',
+                                          ),),
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                      ),
+                                    ),
+                                  ],
+
+                                );
+                              }
+                          );
+                        }
+                    ),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                ],
+              )
             ),
 
           ),
@@ -503,6 +574,7 @@ class _UploadInstituedocumentsState extends State<UploadInstituedocuments> {
                               ),
                             ),*/
 
+
                             SizedBox(height: 10,),
 
                           ],
@@ -513,6 +585,7 @@ class _UploadInstituedocumentsState extends State<UploadInstituedocuments> {
               },
             ),
           ),
+
           Positioned(
             bottom: 0,
               child: Container(

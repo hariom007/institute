@@ -21,7 +21,7 @@ class MyInstitute extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: SplashScreen(),
-      title: 'My Institute',
+      title: 'FeaseApp',
       theme: ThemeData(
         primaryColor: AppColors.red_00,
         // backgroundColor: AppColors.primaryBackGroundColor,

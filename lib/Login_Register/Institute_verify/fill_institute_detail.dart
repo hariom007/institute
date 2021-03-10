@@ -38,7 +38,6 @@ class _FillInstituteDetailsState extends State<FillInstituteDetails> {
 
   String InstTypeId;
 
-
   TextEditingController instituteTrustNameController =  TextEditingController();
   TextEditingController instituteNameController =  TextEditingController();
   TextEditingController emailController =  TextEditingController();

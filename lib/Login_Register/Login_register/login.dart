@@ -341,7 +341,8 @@ class _LoginPageState extends State<LoginPage> with ValidationMixin {
                                     color: AppColors.appBarColor,
                                   ),
                                 ),
-                                Align(
+                              SizedBox(height: 50,)
+                              /*  Align(
                                   alignment: Alignment.bottomCenter,
                                   child: Container(
                                     margin: EdgeInsets.symmetric(vertical: 20),
@@ -351,7 +352,7 @@ class _LoginPageState extends State<LoginPage> with ValidationMixin {
                                       children: <Widget>[
                                         InkWell(
                                           onTap: () {
-                                            // MyNavigator.goToRegistrationPage(context);
+                                            MyNavigator.goToRegistrationPage(context);
                                           },
                                           child: RichText(
                                             textAlign: TextAlign.center,
@@ -372,7 +373,7 @@ class _LoginPageState extends State<LoginPage> with ValidationMixin {
                                       ],
                                     ),
                                   ),
-                                ),
+                                ),*/
                               ],
                             ),
                           ),
@@ -397,7 +398,10 @@ class ValidationMixin {
     if (value.isEmpty) {
       return 'Please enter mobile number\n';
     }
-    if (value.length == 13) {
+    if (value.length > 10) {
+      return 'Must be more than 10 character\n';
+    }
+    if (value.length < 10) {
       return 'Must be more than 10 character\n';
     }
     return null;
