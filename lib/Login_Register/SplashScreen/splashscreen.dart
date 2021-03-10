@@ -25,7 +25,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   bool _isLoggedIn= false;
- bool isLoading = false;
+  bool isLoading = false;
   void _checkIfLoggedIn() async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     var instCode = localStorage.getString('ICODE');

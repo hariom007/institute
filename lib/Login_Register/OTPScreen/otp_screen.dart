@@ -155,72 +155,8 @@ class _OTPScreenPageState extends State<OTPScreenPage> {
     super.initState();
     mobileNumber = '${widget.phone}';
     print(mobileNumber);
-   /* String smsCode = optController.text.toString().trim();
-    print(smsCode.toString());
-
-    String otp= '${widget.otp}'.toString();
-    print(otp);*/
 
   }
-
-/*
-  void register() async {
-    Helper.dialogHelper.showAlertDialog(context);
-
-     String smsCode = optController.text.toString().trim();
-    print(smsCode.toString());
-
-
-    var data = {
-
-      "MobileNo":mobileNumber,
-      "OTP": smsCode
-
-    };
-    print(data);
-    try {
-      setState(() {
-        isLoading=true;
-      });
-      var res = await CallApi().postData(data, 'RegisterOTP');
-      var body = json.decode(res.body);
-      print(body);
-
-      print(body['ID'].toString());
-
-      String id = body['ID'].toString();
-
-      if (body != null && body['msg'] == 'Register OTP Successfully')
-      {
-
-        Navigator.push(context, MaterialPageRoute(builder: (context)=>InstituteDetails()));
-
-      }
-      else
-      {
-
-        Fluttertoast.showToast(
-          msg: body['msg'].toString(),
-          textColor: Colors.black,
-          toastLength: Toast.LENGTH_SHORT,
-          fontSize: 15,
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.white,
-        );
-
-      }
-      setState(() {
-        isLoading=false;
-      });
-
-    }
-
-
-    catch(e){
-      print('print error: $e');
-    }
-  }
-*/
 
   @override
   Widget build(BuildContext context) {
